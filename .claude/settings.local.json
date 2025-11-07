@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm run dev:*)",
+      "Bash(cat:*)",
+      "Bash(mkdir:*)",
+      "Bash(timeout /t 3)",
+      "Bash(npx tsc:*)",
+      "Bash(ping:*)",
+      "Bash(git init:*)",
+      "Bash(README.md)",
+      "Bash(echo:*)",
+      "Bash(git config:*)",
+      "Bash(git add:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
