@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { KOL, SocialPlatform, KOLRating } from '../types/kol';
-import { ArrowLeft, Plus, Trash2, Youtube, Facebook, Instagram, Twitter } from 'lucide-react';
+import { KOL, SocialPlatform, KOLRating, ProfitShareRecord, ProfitSharePeriod } from '../types/kol';
+import { ArrowLeft, Plus, Trash2, Youtube, Facebook, Instagram, Twitter, DollarSign } from 'lucide-react';
 import { FaTiktok } from 'react-icons/fa';
 
 interface KOLFormProps {
@@ -27,11 +27,28 @@ const KOLForm: React.FC<KOLFormProps> = ({ kol, onSave, onCancel }) => {
   const [newCategory, setNewCategory] = useState('');
   const [newTag, setNewTag] = useState('');
 
+  // 分潤表單狀態
+  const [newProfitShare, setNewProfitShare] = useState({
+    period: 'monthly' as ProfitSharePeriod,
+    periodStart: '',
+    periodEnd: '',
+    salesAmount: '',
+    profitShareRate: '',
+    note: ''
+  });
+
   // 常用分類選項
   const categoryOptions = ['美妝', '時尚', '3C', '科技', '美食', '旅遊', '生活', '運動', '健身', '遊戲', '電競', '娛樂', '親子', '寵物', '財經', '教育'];
 
   // 評級選項
   const ratingOptions: KOLRating[] = ['S', 'A', 'B', 'C', 'D'];
+
+  // 分潤週期選項
+  const periodOptions = [
+    { value: 'monthly', label: '每月' },
+    { value: 'quarterly', label: '每季' },
+    { value: 'yearly', label: '每年' }
+  ];
 
   const handleAddCategory = () => {
     if (newCategory && !formData.category?.includes(newCategory)) {
@@ -99,6 +116,59 @@ const KOLForm: React.FC<KOLFormProps> = ({ kol, onSave, onCancel }) => {
     setFormData({
       ...formData,
       socialPlatforms: formData.socialPlatforms?.filter((_, i) => i !== index)
+    });
+  };
+
+  const handleAddProfitShare = () => {
+    const salesAmount = parseFloat(newProfitShare.salesAmount);
+    const profitShareRate = parseFloat(newProfitShare.profitShareRate);
+
+    if (!newProfitShare.periodStart || !newProfitShare.periodEnd || !salesAmount || !profitShareRate) {
+      alert('請填寫完整的分潤資訊');
+      return;
+    }
+
+    if (profitShareRate < 0 || profitShareRate > 100) {
+      alert('分潤比例必須在 0-100 之間');
+      return;
+    }
+
+    // 計算分潤金額
+    const profitAmount = Math.round(salesAmount * (profitShareRate / 100));
+
+    const newRecord: ProfitShareRecord = {
+      id: Date.now().toString(),
+      settlementDate: new Date().toISOString().split('T')[0],
+      period: newProfitShare.period,
+      periodStart: newProfitShare.periodStart,
+      periodEnd: newProfitShare.periodEnd,
+      salesAmount: salesAmount,
+      profitShareRate: profitShareRate,
+      profitAmount: profitAmount,
+      note: newProfitShare.note,
+      createdAt: new Date().toISOString()
+    };
+
+    setFormData({
+      ...formData,
+      profitShares: [...(formData.profitShares || []), newRecord]
+    });
+
+    // 重置表單
+    setNewProfitShare({
+      period: 'monthly',
+      periodStart: '',
+      periodEnd: '',
+      salesAmount: '',
+      profitShareRate: '',
+      note: ''
+    });
+  };
+
+  const handleRemoveProfitShare = (id: string) => {
+    setFormData({
+      ...formData,
+      profitShares: formData.profitShares?.filter(ps => ps.id !== id)
     });
   };
 
@@ -366,6 +436,176 @@ const KOLForm: React.FC<KOLFormProps> = ({ kol, onSave, onCancel }) => {
               </div>
             ))}
           </div>
+        </div>
+
+        {/* 分潤管理 */}
+        <div className="border-b pb-6">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-semibold text-gray-700 flex items-center gap-2">
+              <DollarSign size={20} className="text-green-600" />
+              分潤管理
+            </h3>
+          </div>
+
+          {/* 新增分潤表單 */}
+          <div className="bg-gray-50 p-4 rounded-lg mb-4 space-y-3">
+            <h4 className="font-medium text-gray-700 mb-3">新增分潤記錄</h4>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">分潤週期 *</label>
+                <select
+                  value={newProfitShare.period}
+                  onChange={(e) => setNewProfitShare({ ...newProfitShare, period: e.target.value as ProfitSharePeriod })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  {periodOptions.map(opt => (
+                    <option key={opt.value} value={opt.value}>{opt.label}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">期間開始 *</label>
+                <input
+                  type="date"
+                  value={newProfitShare.periodStart}
+                  onChange={(e) => setNewProfitShare({ ...newProfitShare, periodStart: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">期間結束 *</label>
+                <input
+                  type="date"
+                  value={newProfitShare.periodEnd}
+                  onChange={(e) => setNewProfitShare({ ...newProfitShare, periodEnd: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">銷售金額 (元) *</label>
+                <input
+                  type="number"
+                  min="0"
+                  step="1"
+                  value={newProfitShare.salesAmount}
+                  onChange={(e) => setNewProfitShare({ ...newProfitShare, salesAmount: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="請輸入銷售金額"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">分潤比例 (%) *</label>
+                <input
+                  type="number"
+                  min="0"
+                  max="100"
+                  step="0.1"
+                  value={newProfitShare.profitShareRate}
+                  onChange={(e) => setNewProfitShare({ ...newProfitShare, profitShareRate: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="請輸入分潤比例"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  預估分潤金額
+                </label>
+                <div className="w-full px-3 py-2 bg-green-50 border border-green-300 rounded-md text-green-700 font-semibold">
+                  NT$ {newProfitShare.salesAmount && newProfitShare.profitShareRate
+                    ? Math.round(parseFloat(newProfitShare.salesAmount) * (parseFloat(newProfitShare.profitShareRate) / 100)).toLocaleString()
+                    : '0'}
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">備註</label>
+              <input
+                type="text"
+                value={newProfitShare.note}
+                onChange={(e) => setNewProfitShare({ ...newProfitShare, note: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="選填：輸入備註說明"
+              />
+            </div>
+
+            <button
+              type="button"
+              onClick={handleAddProfitShare}
+              className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
+            >
+              <Plus size={20} />
+              結算並新增分潤記錄
+            </button>
+          </div>
+
+          {/* 分潤記錄列表 */}
+          {formData.profitShares && formData.profitShares.length > 0 && (
+            <div className="space-y-3">
+              <h4 className="font-medium text-gray-700">分潤歷史記錄</h4>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead className="bg-gray-100">
+                    <tr>
+                      <th className="px-3 py-2 text-left">結算日期</th>
+                      <th className="px-3 py-2 text-left">週期</th>
+                      <th className="px-3 py-2 text-left">期間</th>
+                      <th className="px-3 py-2 text-right">銷售金額</th>
+                      <th className="px-3 py-2 text-right">分潤%</th>
+                      <th className="px-3 py-2 text-right">分潤金額</th>
+                      <th className="px-3 py-2 text-left">備註</th>
+                      <th className="px-3 py-2 text-center">操作</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {formData.profitShares.map((ps) => (
+                      <tr key={ps.id} className="border-b hover:bg-gray-50">
+                        <td className="px-3 py-2">{ps.settlementDate}</td>
+                        <td className="px-3 py-2">
+                          {periodOptions.find(p => p.value === ps.period)?.label}
+                        </td>
+                        <td className="px-3 py-2 text-xs">
+                          {ps.periodStart} ~ {ps.periodEnd}
+                        </td>
+                        <td className="px-3 py-2 text-right">
+                          NT$ {ps.salesAmount.toLocaleString()}
+                        </td>
+                        <td className="px-3 py-2 text-right">{ps.profitShareRate}%</td>
+                        <td className="px-3 py-2 text-right font-semibold text-green-600">
+                          NT$ {ps.profitAmount.toLocaleString()}
+                        </td>
+                        <td className="px-3 py-2 text-xs text-gray-600">{ps.note || '-'}</td>
+                        <td className="px-3 py-2 text-center">
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveProfitShare(ps.id)}
+                            className="text-red-600 hover:text-red-800"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                  <tfoot className="bg-gray-100 font-semibold">
+                    <tr>
+                      <td colSpan={5} className="px-3 py-2 text-right">總計分潤金額：</td>
+                      <td className="px-3 py-2 text-right text-green-700">
+                        NT$ {formData.profitShares.reduce((sum, ps) => sum + ps.profitAmount, 0).toLocaleString()}
+                      </td>
+                      <td colSpan={2}></td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* 備註 */}

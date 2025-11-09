@@ -39,6 +39,44 @@ export const mockKOLs: KOL[] = [
         lastUpdated: '2025-10-28'
       }
     ],
+    profitShares: [
+      {
+        id: '1001',
+        settlementDate: '2025-01-05',
+        period: 'monthly',
+        periodStart: '2024-12-01',
+        periodEnd: '2024-12-31',
+        salesAmount: 500000,
+        profitShareRate: 15,
+        profitAmount: 75000,
+        note: '12月美妝產品銷售分潤',
+        createdAt: '2025-01-05T10:00:00Z'
+      },
+      {
+        id: '1002',
+        settlementDate: '2025-04-10',
+        period: 'quarterly',
+        periodStart: '2025-01-01',
+        periodEnd: '2025-03-31',
+        salesAmount: 1200000,
+        profitShareRate: 18,
+        profitAmount: 216000,
+        note: 'Q1季度分潤結算',
+        createdAt: '2025-04-10T14:30:00Z'
+      },
+      {
+        id: '1003',
+        settlementDate: '2025-10-15',
+        period: 'monthly',
+        periodStart: '2025-09-01',
+        periodEnd: '2025-09-30',
+        salesAmount: 680000,
+        profitShareRate: 20,
+        profitAmount: 136000,
+        note: '9月促銷活動分潤',
+        createdAt: '2025-10-15T09:20:00Z'
+      }
+    ],
     createdAt: '2024-01-15',
     updatedAt: '2025-10-28'
   },
@@ -69,6 +107,20 @@ export const mockKOLs: KOL[] = [
         followers: 180000,
         engagement: 7.5,
         lastUpdated: '2025-10-29'
+      }
+    ],
+    profitShares: [
+      {
+        id: '2001',
+        settlementDate: '2025-07-15',
+        period: 'yearly',
+        periodStart: '2024-07-01',
+        periodEnd: '2025-06-30',
+        salesAmount: 3500000,
+        profitShareRate: 25,
+        profitAmount: 875000,
+        note: '年度3C產品推廣分潤',
+        createdAt: '2025-07-15T11:00:00Z'
       }
     ],
     createdAt: '2024-02-20',

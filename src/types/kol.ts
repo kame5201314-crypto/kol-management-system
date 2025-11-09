@@ -12,6 +12,23 @@ export interface SocialPlatform {
 // KOL 評級
 export type KOLRating = 'S' | 'A' | 'B' | 'C' | 'D';
 
+// 分潤週期類型
+export type ProfitSharePeriod = 'monthly' | 'quarterly' | 'yearly';
+
+// 分潤記錄
+export interface ProfitShareRecord {
+  id: string; // 唯一識別碼
+  settlementDate: string; // 結算日期
+  period: ProfitSharePeriod; // 分潤週期：每月/每季/每年
+  periodStart: string; // 期間開始日期
+  periodEnd: string; // 期間結束日期
+  salesAmount: number; // 銷售金額
+  profitShareRate: number; // 分潤比例 (%)
+  profitAmount: number; // 分潤金額 (自動計算)
+  note?: string; // 備註
+  createdAt: string;
+}
+
 // KOL 基本資料
 export interface KOL {
   id: number;
@@ -24,6 +41,7 @@ export interface KOL {
   rating: KOLRating; // 評級 S/A/B/C/D
   note: string; // 備註
   socialPlatforms: SocialPlatform[]; // 社群平台資料
+  profitShares?: ProfitShareRecord[]; // 分潤記錄
   createdAt: string;
   updatedAt: string;
 }
