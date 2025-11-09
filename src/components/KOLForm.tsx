@@ -267,6 +267,26 @@ const KOLForm: React.FC<KOLFormProps> = ({ kol, onSave, onCancel }) => {
                 ))}
               </select>
             </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Facebook 連結</label>
+              <input
+                type="url"
+                value={formData.facebookUrl || ''}
+                onChange={(e) => setFormData({ ...formData, facebookUrl: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="https://facebook.com/... 或 https://m.me/..."
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Line 連結</label>
+              <input
+                type="url"
+                value={formData.lineUrl || ''}
+                onChange={(e) => setFormData({ ...formData, lineUrl: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="https://line.me/ti/p/..."
+              />
+            </div>
           </div>
         </div>
 

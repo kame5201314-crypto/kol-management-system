@@ -36,6 +36,8 @@ export interface KOL {
   nickname: string; // 暱稱
   email: string;
   phone: string;
+  facebookUrl?: string; // Facebook 個人頁面或 Messenger 連結
+  lineUrl?: string; // Line 聯絡連結
   category: string[]; // 內容類別：美妝、3C、美食、旅遊、時尚、生活、遊戲、運動等
   tags: string[]; // 自訂標籤
   rating: KOLRating; // 評級 S/A/B/C/D

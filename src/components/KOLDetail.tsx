@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { KOL, Collaboration, SalesTracking, KOLRating } from '../types/kol';
-import { ArrowLeft, Edit, Mail, Phone, MapPin, Star, Youtube, Facebook, Instagram, Twitter, TrendingUp, DollarSign, Eye, Heart, MessageCircle, Share2 } from 'lucide-react';
-import { FaTiktok } from 'react-icons/fa';
+import { ArrowLeft, Edit, Mail, Phone, MapPin, Star, Youtube, Facebook, Instagram, Twitter, TrendingUp, DollarSign, Eye, Heart, MessageCircle, Share2, FileText } from 'lucide-react';
+import { FaTiktok, FaLine } from 'react-icons/fa';
+import ContractGenerator from './ContractGenerator';
 
 interface KOLDetailProps {
   kol: KOL;
@@ -12,6 +13,7 @@ interface KOLDetailProps {
 }
 
 const KOLDetail: React.FC<KOLDetailProps> = ({ kol, collaborations, salesTracking, onEdit, onBack }) => {
+  const [showContractGenerator, setShowContractGenerator] = useState(false);
   // 取得評級樣式
   const getRatingStyle = (rating: KOLRating) => {
     const styles = {
@@ -101,13 +103,22 @@ const KOLDetail: React.FC<KOLDetailProps> = ({ kol, collaborations, salesTrackin
               <h1 className="text-3xl font-bold mb-2">{kol.name}</h1>
               <p className="text-lg opacity-90">@{kol.nickname}</p>
             </div>
-            <button
-              onClick={onEdit}
-              className="flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 px-4 py-2 rounded-md transition-colors"
-            >
-              <Edit size={18} />
-              編輯
-            </button>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setShowContractGenerator(true)}
+                className="flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 px-4 py-2 rounded-md transition-colors"
+              >
+                <FileText size={18} />
+                生成合約
+              </button>
+              <button
+                onClick={onEdit}
+                className="flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 px-4 py-2 rounded-md transition-colors"
+              >
+                <Edit size={18} />
+                編輯
+              </button>
+            </div>
           </div>
           <div className="mt-4 flex items-center gap-4">
             <div className={`flex items-center gap-2 px-4 py-2 rounded-full font-bold ${getRatingStyle(kol.rating)}`}>
@@ -136,6 +147,32 @@ const KOLDetail: React.FC<KOLDetailProps> = ({ kol, collaborations, salesTrackin
                 <Phone size={18} className="text-green-600" />
                 <a href={`tel:${kol.phone}`} className="hover:underline">{kol.phone}</a>
               </div>
+              {kol.facebookUrl && (
+                <div className="flex items-center gap-3">
+                  <a
+                    href={kol.facebookUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                  >
+                    <Facebook size={18} />
+                    聯絡 Facebook
+                  </a>
+                </div>
+              )}
+              {kol.lineUrl && (
+                <div className="flex items-center gap-3">
+                  <a
+                    href={kol.lineUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors"
+                  >
+                    <FaLine size={18} />
+                    聯絡 Line
+                  </a>
+                </div>
+              )}
             </div>
           </div>
 
@@ -411,6 +448,14 @@ const KOLDetail: React.FC<KOLDetailProps> = ({ kol, collaborations, salesTrackin
           </div>
         )}
       </div>
+
+      {/* 合約生成器 */}
+      {showContractGenerator && (
+        <ContractGenerator
+          kol={kol}
+          onClose={() => setShowContractGenerator(false)}
+        />
+      )}
     </div>
   );
 };
