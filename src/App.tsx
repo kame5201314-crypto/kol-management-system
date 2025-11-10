@@ -46,12 +46,11 @@ export default function App() {
     <div className="min-h-screen bg-gray-50">
       <nav className="bg-white shadow-md">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="flex items-center justify-between h-16">
-            <h1 className="text-xl font-bold text-gray-800">KOL 管理系統</h1>
+          <div className="flex items-center justify-end h-16">
             <div className="flex items-center gap-3">
-              <div className="text-sm">
-                <div className="font-medium text-gray-800">{userName}</div>
-                <div className="text-gray-500 text-xs">{userRole}</div>
+              <div className="text-base">
+                <div className="font-semibold text-gray-800">{userName}</div>
+                <div className="text-gray-500 text-sm">{userRole}</div>
               </div>
               <button
                 onClick={handleLogout}
