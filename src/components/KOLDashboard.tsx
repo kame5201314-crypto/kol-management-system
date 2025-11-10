@@ -37,6 +37,8 @@ const KOLDashboard: React.FC<KOLDashboardProps> = ({ kols, collaborations, sales
   // 已完成的合作
   const completedCollaborations = collaborations.filter(c => c.status === 'completed');
 
+  // 計算 ROI
+  const roi = totalBudget > 0 ? ((totalRevenue - totalBudget) / totalBudget * 100).toFixed(1) : 0;
 
   // 取得表現最佳的 KOL
   const topPerformingKOLs = kols
@@ -129,11 +131,11 @@ const KOLDashboard: React.FC<KOLDashboardProps> = ({ kols, collaborations, sales
       </div>
 
       {/* 財務指標 */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-lg shadow-md p-6 text-white">
           <div className="flex items-center gap-3 mb-2">
             <DollarSign size={28} />
-            <span className="text-lg">總收益</span>
+            <span className="text-lg">總銷售金額</span>
           </div>
           <p className="text-3xl font-bold">NT$ {totalRevenue.toLocaleString()}</p>
           <p className="text-sm opacity-90 mt-1">來自 {salesTracking.length} 筆追蹤</p>
@@ -142,10 +144,19 @@ const KOLDashboard: React.FC<KOLDashboardProps> = ({ kols, collaborations, sales
         <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-md p-6 text-white">
           <div className="flex items-center gap-3 mb-2">
             <DollarSign size={28} />
-            <span className="text-lg">總預算</span>
+            <span className="text-lg">總行銷預算</span>
           </div>
           <p className="text-3xl font-bold">NT$ {totalBudget.toLocaleString()}</p>
           <p className="text-sm opacity-90 mt-1">共 {collaborations.length} 個專案</p>
+        </div>
+
+        <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg shadow-md p-6 text-white">
+          <div className="flex items-center gap-3 mb-2">
+            <TrendingUp size={28} />
+            <span className="text-lg">ROI</span>
+          </div>
+          <p className="text-3xl font-bold">{roi}%</p>
+          <p className="text-sm opacity-90 mt-1">投資回報率</p>
         </div>
       </div>
 
