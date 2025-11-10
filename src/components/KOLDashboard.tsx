@@ -37,8 +37,6 @@ const KOLDashboard: React.FC<KOLDashboardProps> = ({ kols, collaborations, sales
   // 已完成的合作
   const completedCollaborations = collaborations.filter(c => c.status === 'completed');
 
-  // 計算 ROI
-  const roi = totalBudget > 0 ? ((totalRevenue - totalBudget) / totalBudget * 100).toFixed(1) : 0;
 
   // 取得表現最佳的 KOL
   const topPerformingKOLs = kols
@@ -95,7 +93,7 @@ const KOLDashboard: React.FC<KOLDashboardProps> = ({ kols, collaborations, sales
       <h2 className="text-2xl font-bold text-gray-800">統計儀表板</h2>
 
       {/* 核心指標卡片 */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center justify-between mb-2">
             <span className="text-gray-600">KOL 數量</span>
@@ -122,15 +120,6 @@ const KOLDashboard: React.FC<KOLDashboardProps> = ({ kols, collaborations, sales
 
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-gray-600">平均互動率</span>
-            <Star className="text-yellow-600" size={24} />
-          </div>
-          <p className="text-3xl font-bold text-gray-800">{avgEngagement.toFixed(1)}%</p>
-          <p className="text-sm text-gray-500 mt-1">所有 KOL 平均</p>
-        </div>
-
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <div className="flex items-center justify-between mb-2">
             <span className="text-gray-600">進行中合作</span>
             <Briefcase className="text-purple-600" size={24} />
           </div>
@@ -140,7 +129,7 @@ const KOLDashboard: React.FC<KOLDashboardProps> = ({ kols, collaborations, sales
       </div>
 
       {/* 財務指標 */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-lg shadow-md p-6 text-white">
           <div className="flex items-center gap-3 mb-2">
             <DollarSign size={28} />
@@ -157,15 +146,6 @@ const KOLDashboard: React.FC<KOLDashboardProps> = ({ kols, collaborations, sales
           </div>
           <p className="text-3xl font-bold">NT$ {totalBudget.toLocaleString()}</p>
           <p className="text-sm opacity-90 mt-1">共 {collaborations.length} 個專案</p>
-        </div>
-
-        <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg shadow-md p-6 text-white">
-          <div className="flex items-center gap-3 mb-2">
-            <TrendingUp size={28} />
-            <span className="text-lg">ROI</span>
-          </div>
-          <p className="text-3xl font-bold">{roi}%</p>
-          <p className="text-sm opacity-90 mt-1">投資回報率</p>
         </div>
       </div>
 
