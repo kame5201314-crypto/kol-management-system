@@ -91,7 +91,12 @@ const KOLManagementSystem = () => {
       <nav className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-gray-800">KOL 管理系統</h1>
+            <button
+              onClick={() => setCurrentView('dashboard')}
+              className="text-2xl font-bold text-gray-800 hover:text-blue-600 transition-colors"
+            >
+              遇見未來 KOL管理系統
+            </button>
             <div className="flex gap-4">
               <button
                 onClick={() => setCurrentView('dashboard')}

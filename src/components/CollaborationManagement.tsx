@@ -25,7 +25,7 @@ const CollaborationManagement: React.FC<CollaborationManagementProps> = ({
   const [formData, setFormData] = useState<Partial<Collaboration>>({
     kolId: 0,
     projectName: '',
-    brand: '',
+    productName: '',
     status: 'pending',
     startDate: '',
     endDate: '',
@@ -41,7 +41,7 @@ const CollaborationManagement: React.FC<CollaborationManagementProps> = ({
     const kol = kols.find(k => k.id === collab.kolId);
     const matchesSearch =
       collab.projectName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      collab.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      collab.productName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       kol?.name.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesStatus = selectedStatus === '全部' || collab.status === selectedStatus;
@@ -54,7 +54,7 @@ const CollaborationManagement: React.FC<CollaborationManagementProps> = ({
     setFormData({
       kolId: kols.length > 0 ? kols[0].id : 0,
       projectName: '',
-      brand: '',
+      productName: '',
       status: 'pending',
       startDate: '',
       endDate: '',
@@ -147,12 +147,12 @@ const CollaborationManagement: React.FC<CollaborationManagementProps> = ({
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">品牌名稱 *</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">商品名稱 *</label>
               <input
                 type="text"
                 required
-                value={formData.brand}
-                onChange={(e) => setFormData({ ...formData, brand: e.target.value })}
+                value={formData.productName}
+                onChange={(e) => setFormData({ ...formData, productName: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
@@ -305,7 +305,7 @@ const CollaborationManagement: React.FC<CollaborationManagementProps> = ({
                       {getStatusText(collab.status)}
                     </span>
                   </div>
-                  <p className="text-gray-600 mb-1">品牌: {collab.brand}</p>
+                  <p className="text-gray-600 mb-1">商品: {collab.productName}</p>
                   <p className="text-gray-600">KOL: {getKOLName(collab.kolId)}</p>
                 </div>
                 <div className="flex gap-2">

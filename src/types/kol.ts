@@ -4,8 +4,6 @@ export interface SocialPlatform {
   handle: string; // 帳號名稱
   url: string;
   followers: number; // 粉絲數
-  engagement: number; // 互動率 (%)
-  avgViews?: number; // 平均觀看數
   lastUpdated: string; // 最後更新日期
 }
 
@@ -21,6 +19,7 @@ export interface ProfitShareRecord {
   settlementDate: string; // 結算日期
   period: ProfitSharePeriod; // 分潤週期：每月/每季/每年
   periodStart: string; // 期間開始日期
+  month?: string; // 月份選擇 (YYYY-MM 格式)
   periodEnd: string; // 期間結束日期
   salesAmount: number; // 銷售金額
   profitShareRate: number; // 分潤比例 (%)
@@ -56,7 +55,8 @@ export interface Collaboration {
   id: number;
   kolId: number;
   projectName: string; // 專案名稱
-  brand: string; // 品牌名稱
+  productName: string; // 商品名稱
+  productCode?: string; // 商品編號
   status: CollaborationStatus;
   startDate: string;
   endDate: string;

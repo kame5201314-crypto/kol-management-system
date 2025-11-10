@@ -31,6 +31,7 @@ const KOLForm: React.FC<KOLFormProps> = ({ kol, onSave, onCancel }) => {
   // 分潤表單狀態
   const [newProfitShare, setNewProfitShare] = useState({
     period: 'monthly' as ProfitSharePeriod,
+    month: '',
     periodStart: '',
     periodEnd: '',
     salesAmount: '',
@@ -91,8 +92,6 @@ const KOLForm: React.FC<KOLFormProps> = ({ kol, onSave, onCancel }) => {
       handle: '',
       url: '',
       followers: 0,
-      engagement: 0,
-      avgViews: 0,
       lastUpdated: new Date().toISOString().split('T')[0]
     };
     setFormData({
@@ -140,6 +139,7 @@ const KOLForm: React.FC<KOLFormProps> = ({ kol, onSave, onCancel }) => {
     const newRecord: ProfitShareRecord = {
       id: Date.now().toString(),
       settlementDate: new Date().toISOString().split('T')[0],
+      month: newProfitShare.month,
       period: newProfitShare.period,
       periodStart: newProfitShare.periodStart,
       periodEnd: newProfitShare.periodEnd,
@@ -157,6 +157,7 @@ const KOLForm: React.FC<KOLFormProps> = ({ kol, onSave, onCancel }) => {
 
     // 重置表單
     setNewProfitShare({
+      month: '',
       period: 'monthly',
       periodStart: '',
       periodEnd: '',
@@ -432,27 +433,6 @@ const KOLForm: React.FC<KOLFormProps> = ({ kol, onSave, onCancel }) => {
                       className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
-                  <div>
-                    <label className="block text-xs text-gray-600 mb-1">互動率 (%)</label>
-                    <input
-                      type="number"
-                      step="0.1"
-                      value={platform.engagement}
-                      onChange={(e) => handleUpdateSocialPlatform(idx, 'engagement', parseFloat(e.target.value) || 0)}
-                      className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                  </div>
-                  {platform.platform === 'youtube' && (
-                    <div>
-                      <label className="block text-xs text-gray-600 mb-1">平均觀看數</label>
-                      <input
-                        type="number"
-                        value={platform.avgViews || 0}
-                        onChange={(e) => handleUpdateSocialPlatform(idx, 'avgViews', parseInt(e.target.value) || 0)}
-                        className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      />
-                    </div>
-                  )}
                 </div>
               </div>
             ))}
@@ -473,6 +453,16 @@ const KOLForm: React.FC<KOLFormProps> = ({ kol, onSave, onCancel }) => {
             <h4 className="font-medium text-gray-700 mb-3">新增分潤記錄</h4>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">月份選擇</label>
+                <input
+                  type="month"
+                  value={newProfitShare.month}
+                  onChange={(e) => setNewProfitShare({ ...newProfitShare, month: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">分潤週期 *</label>
                 <select
@@ -574,6 +564,7 @@ const KOLForm: React.FC<KOLFormProps> = ({ kol, onSave, onCancel }) => {
                 <table className="w-full text-sm">
                   <thead className="bg-gray-100">
                     <tr>
+                      <th className="px-3 py-2 text-left">月份</th>
                       <th className="px-3 py-2 text-left">結算日期</th>
                       <th className="px-3 py-2 text-left">週期</th>
                       <th className="px-3 py-2 text-left">期間</th>
@@ -587,6 +578,7 @@ const KOLForm: React.FC<KOLFormProps> = ({ kol, onSave, onCancel }) => {
                   <tbody>
                     {formData.profitShares.map((ps) => (
                       <tr key={ps.id} className="border-b hover:bg-gray-50">
+                        <td className="px-3 py-2">{ps.month || '-'}</td>
                         <td className="px-3 py-2">{ps.settlementDate}</td>
                         <td className="px-3 py-2">
                           {periodOptions.find(p => p.value === ps.period)?.label}
