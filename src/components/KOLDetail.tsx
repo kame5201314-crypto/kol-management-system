@@ -201,7 +201,7 @@ const KOLDetail: React.FC<KOLDetailProps> = ({ kol, collaborations, salesTrackin
       </div>
 
       {/* 統計摘要 */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="bg-white rounded-lg shadow-md p-4">
           <div className="flex items-center gap-3 mb-2">
             <TrendingUp className="text-blue-600" size={24} />
@@ -211,15 +211,8 @@ const KOLDetail: React.FC<KOLDetailProps> = ({ kol, collaborations, salesTrackin
         </div>
         <div className="bg-white rounded-lg shadow-md p-4">
           <div className="flex items-center gap-3 mb-2">
-            <Heart className="text-pink-600" size={24} />
-            <span className="text-gray-600 text-sm">平均互動率</span>
-          </div>
-          <p className="text-2xl font-bold text-pink-600">{avgEngagement}%</p>
-        </div>
-        <div className="bg-white rounded-lg shadow-md p-4">
-          <div className="flex items-center gap-3 mb-2">
             <DollarSign className="text-green-600" size={24} />
-            <span className="text-gray-600 text-sm">總銷售額</span>
+            <span className="text-gray-600 text-sm">總營業額</span>
           </div>
           <p className="text-2xl font-bold text-green-600">NT$ {totalRevenue.toLocaleString()}</p>
         </div>
