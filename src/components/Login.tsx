@@ -30,6 +30,45 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
     }
   }, []);
 
+  // 測試帳號快速登入
+  const handleTestLogin = async () => {
+    setError('');
+    setSuccess('');
+    setLoading(true);
+
+    // 使用測試帳號登入
+    const testEmail = 'admin@test.com';
+    const testPassword = 'mefu69563216';
+
+    const { error: signInError } = await signIn(testEmail, testPassword);
+
+    if (signInError) {
+      // 如果測試帳號不存在，自動註冊
+      const { error: signUpError } = await signUp(testEmail, testPassword, 'Admin');
+
+      if (signUpError) {
+        setError(`無法建立測試帳號：${signUpError.message}`);
+        setLoading(false);
+        return;
+      }
+
+      setSuccess('測試帳號已建立，正在登入...');
+
+      // 註冊後重新登入
+      setTimeout(async () => {
+        const { error } = await signIn(testEmail, testPassword);
+        if (!error) {
+          onLogin('Admin', 'admin');
+        }
+        setLoading(false);
+      }, 1000);
+    } else {
+      // 登入成功
+      onLogin('Admin', 'admin');
+      setLoading(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -226,6 +265,19 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
               )}
             </button>
 
+            {/* 測試帳號登入按鈕 */}
+            {!isSignUp && (
+              <button
+                type="button"
+                onClick={handleTestLogin}
+                disabled={loading}
+                className="w-full bg-green-600 text-white py-3 rounded-lg font-medium hover:bg-green-700 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <Users size={20} />
+                使用測試帳號登入
+              </button>
+            )}
+
             {/* 切換登入/註冊 */}
             <div className="text-center">
               <button
@@ -240,6 +292,13 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
                 {isSignUp ? '已有帳號？點此登入' : '還沒有帳號？點此註冊'}
               </button>
             </div>
+
+            {/* 測試帳號說明 */}
+            {!isSignUp && (
+              <div className="text-center text-xs text-gray-500 mt-2">
+                測試帳號：admin@test.com / mefu69563216
+              </div>
+            )}
           </form>
         </div>
 
