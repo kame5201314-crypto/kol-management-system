@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { KOL, Collaboration, SalesTracking } from '../types/kol';
 import { mockKOLs, mockCollaborations, mockSalesTracking } from '../data/mockData';
 import KOLDashboard from './KOLDashboard';
@@ -7,17 +7,46 @@ import KOLDetail from './KOLDetail';
 import KOLForm from './KOLForm';
 import CollaborationManagement from './CollaborationManagement';
 import { Users, Briefcase, DollarSign, BarChart3 } from 'lucide-react';
+import * as kolService from '../services/kolService';
 
 type ViewType = 'dashboard' | 'list' | 'detail' | 'form' | 'collaborations';
 
 const KOLManagementSystem = () => {
-  const [kols, setKOLs] = useState<KOL[]>(mockKOLs);
+  const [kols, setKOLs] = useState<KOL[]>([]);
   const [collaborations, setCollaborations] = useState<Collaboration[]>(mockCollaborations);
   const [salesTracking, setSalesTracking] = useState<SalesTracking[]>(mockSalesTracking);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const [currentView, setCurrentView] = useState<ViewType>('dashboard');
   const [selectedKOL, setSelectedKOL] = useState<KOL | null>(null);
   const [editingKOL, setEditingKOL] = useState<KOL | null>(null);
+
+  // 載入 KOL 資料
+  useEffect(() => {
+    loadKOLs();
+  }, []);
+
+  const loadKOLs = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await kolService.getAllKOLs();
+      setKOLs(data);
+    } catch (err: any) {
+      console.error('載入 KOL 資料失敗:', err);
+      // 如果資料庫還沒建立，使用 mock 資料
+      if (err.message?.includes('relation') || err.code === 'PGRST116') {
+        console.log('使用 mock 資料（資料庫表格尚未建立）');
+        setKOLs(mockKOLs);
+        setError('資料庫尚未建立，目前使用測試資料');
+      } else {
+        setError(`載入資料失敗: ${err.message}`);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleAddKOL = () => {
     setEditingKOL(null);
@@ -34,30 +63,37 @@ const KOLManagementSystem = () => {
     setCurrentView('detail');
   };
 
-  const handleDeleteKOL = (id: number) => {
+  const handleDeleteKOL = async (id: number) => {
     if (confirm('確定要刪除此 KOL 嗎？')) {
-      setKOLs(kols.filter(k => k.id !== id));
-      // 同時刪除相關的合作專案
-      setCollaborations(collaborations.filter(c => c.kolId !== id));
-      setSalesTracking(salesTracking.filter(s => s.kolId !== id));
+      try {
+        await kolService.deleteKOL(id);
+        setKOLs(kols.filter(k => k.id !== id));
+        // 同時刪除相關的合作專案
+        setCollaborations(collaborations.filter(c => c.kolId !== id));
+        setSalesTracking(salesTracking.filter(s => s.kolId !== id));
+      } catch (err: any) {
+        console.error('刪除 KOL 失敗:', err);
+        alert(`刪除失敗: ${err.message}`);
+      }
     }
   };
 
-  const handleSaveKOL = (kolData: Partial<KOL>) => {
-    if (editingKOL) {
-      // 更新現有 KOL
-      setKOLs(kols.map(k => k.id === editingKOL.id ? { ...k, ...kolData, updatedAt: new Date().toISOString().split('T')[0] } : k));
-    } else {
-      // 新增 KOL
-      const newKOL: KOL = {
-        id: Math.max(...kols.map(k => k.id), 0) + 1,
-        ...kolData as KOL,
-        createdAt: new Date().toISOString().split('T')[0],
-        updatedAt: new Date().toISOString().split('T')[0]
-      };
-      setKOLs([...kols, newKOL]);
+  const handleSaveKOL = async (kolData: Partial<KOL>) => {
+    try {
+      if (editingKOL) {
+        // 更新現有 KOL
+        const updated = await kolService.updateKOL(editingKOL.id, kolData);
+        setKOLs(kols.map(k => k.id === editingKOL.id ? updated : k));
+      } else {
+        // 新增 KOL
+        const newKOL = await kolService.createKOL(kolData as Omit<KOL, 'id' | 'createdAt' | 'updatedAt'>);
+        setKOLs([...kols, newKOL]);
+      }
+      setCurrentView('list');
+    } catch (err: any) {
+      console.error('儲存 KOL 失敗:', err);
+      alert(`儲存失敗: ${err.message}`);
     }
-    setCurrentView('list');
   };
 
   const handleSaveCollaboration = (collabData: Partial<Collaboration>) => {
@@ -85,8 +121,29 @@ const KOLManagementSystem = () => {
     }
   };
 
+  // 載入中顯示
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">載入中...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* 錯誤提示 */}
+      {error && (
+        <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+          <div className="max-w-7xl mx-auto px-6">
+            <p className="text-yellow-700">{error}</p>
+          </div>
+        </div>
+      )}
+
       {/* 導航列 */}
       <nav className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-6 py-6">

@@ -19,7 +19,14 @@
       "Bash(git branch:*)",
       "Bash(git push:*)",
       "Bash(git remote:*)",
-      "Bash(git pull:*)"
+      "Bash(git pull:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(dir:*)",
+      "Bash(SECURITY_AUDIT_REPORT.md)",
+      "Bash(npx vercel:*)",
+      "Bash(nul)",
+      "Bash(printf:*)"
     ],
     "deny": [],
     "ask": []
