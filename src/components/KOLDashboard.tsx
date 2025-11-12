@@ -179,7 +179,6 @@ const KOLDashboard: React.FC<KOLDashboardProps> = ({ kols, collaborations, sales
                 </div>
                 <div className="text-right">
                   <p className="font-semibold text-green-600">NT$ {revenue.toLocaleString()}</p>
-                  <p className="text-xs text-gray-500">{engagement.toFixed(1)}% 互動率</p>
                 </div>
               </div>
             ))}
