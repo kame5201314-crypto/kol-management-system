@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { KOL, SocialPlatform, KOLRating, ProfitShareRecord, ProfitSharePeriod } from '../types/kol';
 import { ArrowLeft, Plus, Trash2, Youtube, Facebook, Instagram, Twitter, DollarSign } from 'lucide-react';
 import { FaTiktok } from 'react-icons/fa';
-import { calculatePeriodEndDate } from '../utils/profitShareUtils';
 
 interface KOLFormProps {
   kol: KOL | null;
@@ -40,13 +39,8 @@ const KOLForm: React.FC<KOLFormProps> = ({ kol, onSave, onCancel }) => {
     note: ''
   });
 
-  // 當開始日期或分潤週期改變時，自動計算結束日期
-  useEffect(() => {
-    if (newProfitShare.periodStart && newProfitShare.period) {
-      const endDate = calculatePeriodEndDate(newProfitShare.periodStart, newProfitShare.period);
-      setNewProfitShare(prev => ({ ...prev, periodEnd: endDate }));
-    }
-  }, [newProfitShare.periodStart, newProfitShare.period]);
+  // 移除自動計算結束日期的 useEffect
+  // 改為手動選擇期間結束日期
 
   // 常用分類選項
   const categoryOptions = ['美妝', '時尚', '3C', '科技', '美食', '旅遊', '生活', '運動', '健身', '遊戲', '電競', '娛樂', '親子', '寵物', '財經', '教育'];
@@ -231,10 +225,9 @@ const KOLForm: React.FC<KOLFormProps> = ({ kol, onSave, onCancel }) => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">暱稱/藝名 *</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">暱稱/藝名</label>
               <input
                 type="text"
-                required
                 value={formData.nickname}
                 onChange={(e) => setFormData({ ...formData, nickname: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -497,13 +490,13 @@ const KOLForm: React.FC<KOLFormProps> = ({ kol, onSave, onCancel }) => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">期間結束（自動計算）</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">期間結束 *</label>
                 <input
                   type="date"
                   value={newProfitShare.periodEnd}
-                  readOnly
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 cursor-not-allowed"
-                  title="根據開始日期和分潤週期自動計算"
+                  onChange={(e) => setNewProfitShare({ ...newProfitShare, periodEnd: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  title="請選擇合約結束日期"
                 />
               </div>
 

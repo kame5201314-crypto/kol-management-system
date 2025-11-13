@@ -30,44 +30,6 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
     }
   }, []);
 
-  // 測試帳號快速登入
-  const handleTestLogin = async () => {
-    setError('');
-    setSuccess('');
-    setLoading(true);
-
-    // 使用測試帳號登入
-    const testEmail = 'admin@test.com';
-    const testPassword = 'mefu69563216';
-
-    const { error: signInError } = await signIn(testEmail, testPassword);
-
-    if (signInError) {
-      // 如果測試帳號不存在，自動註冊
-      const { error: signUpError } = await signUp(testEmail, testPassword, 'Admin');
-
-      if (signUpError) {
-        setError(`無法建立測試帳號：${signUpError.message}`);
-        setLoading(false);
-        return;
-      }
-
-      setSuccess('測試帳號已建立，正在登入...');
-
-      // 註冊後重新登入
-      setTimeout(async () => {
-        const { error } = await signIn(testEmail, testPassword);
-        if (!error) {
-          onLogin('Admin', 'admin');
-        }
-        setLoading(false);
-      }, 1000);
-    } else {
-      // 登入成功
-      onLogin('Admin', 'admin');
-      setLoading(false);
-    }
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -103,19 +65,13 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
         return;
       }
 
-      setSuccess('註冊成功！請檢查您的電子郵件以驗證帳號。');
-      setLoading(false);
+      setSuccess('註冊成功！正在自動登入...');
 
-      // 清空表單
-      setEmail('');
-      setPassword('');
-      setUsername('');
-
-      // 3 秒後自動切換到登入模式
+      // 註冊成功後自動登入
       setTimeout(() => {
-        setIsSignUp(false);
-        setSuccess('');
-      }, 3000);
+        onLogin(username, 'user');
+        setLoading(false);
+      }, 1000);
     } else {
       // 登入
       const { error: signInError } = await signIn(email, password);
@@ -177,18 +133,18 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
               </div>
             )}
 
-            {/* 電子郵件輸入 */}
+            {/* 帳號輸入 */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                電子郵件
+                {isSignUp ? '電子郵件' : '帳號'}
               </label>
               <div className="relative">
                 <input
-                  type="email"
+                  type={isSignUp ? 'email' : 'text'}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-                  placeholder="請輸入電子郵件"
+                  placeholder={isSignUp ? '請輸入電子郵件' : '請輸入帳號（例如：admin）'}
                 />
               </div>
             </div>
@@ -265,19 +221,6 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
               )}
             </button>
 
-            {/* 測試帳號登入按鈕 */}
-            {!isSignUp && (
-              <button
-                type="button"
-                onClick={handleTestLogin}
-                disabled={loading}
-                className="w-full bg-green-600 text-white py-3 rounded-lg font-medium hover:bg-green-700 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <Users size={20} />
-                使用測試帳號登入
-              </button>
-            )}
-
             {/* 切換登入/註冊 */}
             <div className="text-center">
               <button
@@ -295,8 +238,15 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
 
             {/* 測試帳號說明 */}
             {!isSignUp && (
-              <div className="text-center text-xs text-gray-500 mt-2">
-                測試帳號：admin@test.com / mefu69563216
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
+                <div className="font-semibold text-blue-800 mb-2">💡 內建測試帳號</div>
+                <div className="text-sm text-blue-700 space-y-1">
+                  <div>帳號：<span className="font-mono bg-white px-2 py-1 rounded">admin</span></div>
+                  <div>密碼：<span className="font-mono bg-white px-2 py-1 rounded">mefu69563216</span></div>
+                </div>
+                <div className="text-xs text-blue-600 mt-2">
+                  直接在上方輸入即可登入
+                </div>
               </div>
             )}
           </form>
