@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Users, Lock, Eye, EyeOff, UserPlus } from 'lucide-react';
+import { Users, Lock, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
 interface LoginProps {
@@ -7,17 +7,14 @@ interface LoginProps {
 }
 
 const Login: React.FC<LoginProps> = ({ onLogin }) => {
-  const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [username, setUsername] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const { signIn, signUp } = useAuth();
+  const { signIn } = useAuth();
 
   // 載入記住的帳號
   React.useEffect(() => {
@@ -34,68 +31,36 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    setSuccess('');
     setLoading(true);
 
     if (!email || !password) {
-      setError('請輸入電子郵件和密碼');
+      setError('請輸入帳號和密碼');
       setLoading(false);
       return;
     }
 
-    if (isSignUp) {
-      // 註冊新帳號
-      if (!username) {
-        setError('請輸入使用者名稱');
-        setLoading(false);
-        return;
-      }
+    // 登入
+    const { error: signInError } = await signIn(email, password);
 
-      if (password.length < 6) {
-        setError('密碼長度至少需要 6 個字元');
-        setLoading(false);
-        return;
-      }
-
-      const { error: signUpError } = await signUp(email, password, username);
-
-      if (signUpError) {
-        setError(`註冊失敗：${signUpError.message}`);
-        setLoading(false);
-        return;
-      }
-
-      setSuccess('註冊成功！正在自動登入...');
-
-      // 註冊成功後自動登入
-      setTimeout(() => {
-        onLogin(username, 'user');
-        setLoading(false);
-      }, 1000);
-    } else {
-      // 登入
-      const { error: signInError } = await signIn(email, password);
-
-      if (signInError) {
-        setError(`登入失敗：${signInError.message}`);
-        setLoading(false);
-        return;
-      }
-
-      // 處理「記住我」功能
-      if (rememberMe) {
-        localStorage.setItem('rememberedEmail', email);
-        localStorage.setItem('rememberedPassword', password);
-      } else {
-        localStorage.removeItem('rememberedEmail');
-        localStorage.removeItem('rememberedPassword');
-      }
-
-      // 登入成功，使用 email 作為 username
-      const displayName = email.split('@')[0];
-      onLogin(displayName, 'user');
+    if (signInError) {
+      setError(`登入失敗：${signInError.message}`);
       setLoading(false);
+      return;
     }
+
+    // 處理「記住我」功能
+    if (rememberMe) {
+      localStorage.setItem('rememberedEmail', email);
+      localStorage.setItem('rememberedPassword', password);
+    } else {
+      localStorage.removeItem('rememberedEmail');
+      localStorage.removeItem('rememberedPassword');
+    }
+
+    // 登入成功，使用 email 作為 username
+    const displayName = email.split('@')[0];
+    onLogin(displayName, 'user');
+    setLoading(false);
   };
 
   return (
@@ -107,44 +72,24 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
             <Users className="text-white" size={32} />
           </div>
           <h1 className="text-3xl font-bold text-gray-800 mb-2">KOL 管理系統</h1>
-          <p className="text-gray-600">
-            {isSignUp ? '建立新帳號' : '請登入以繼續使用'}
-          </p>
+          <p className="text-gray-600">請登入以繼續使用</p>
         </div>
 
-        {/* 登入/註冊表單 */}
+        {/* 登入表單 */}
         <div className="bg-white rounded-lg shadow-xl p-8">
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* 註冊時顯示使用者名稱 */}
-            {isSignUp && (
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  使用者名稱
-                </label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-                    placeholder="請輸入使用者名稱"
-                  />
-                </div>
-              </div>
-            )}
-
             {/* 帳號輸入 */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                {isSignUp ? '電子郵件' : '帳號'}
+                帳號
               </label>
               <div className="relative">
                 <input
-                  type={isSignUp ? 'email' : 'text'}
+                  type="text"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-                  placeholder={isSignUp ? '請輸入電子郵件' : '請輸入帳號（例如：admin）'}
+                  placeholder="請輸入帳號（例如：admin）"
                 />
               </div>
             </div>
@@ -160,7 +105,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition pr-12"
-                  placeholder={isSignUp ? '至少 6 個字元' : '請輸入密碼'}
+                  placeholder="請輸入密碼"
                 />
                 <button
                   type="button"
@@ -172,28 +117,19 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
               </div>
             </div>
 
-            {/* 記住我 (僅登入時顯示) */}
-            {!isSignUp && (
-              <div className="flex items-center">
-                <input
-                  type="checkbox"
-                  id="rememberMe"
-                  checked={rememberMe}
-                  onChange={(e) => setRememberMe(e.target.checked)}
-                  className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                />
-                <label htmlFor="rememberMe" className="ml-2 text-sm text-gray-700 cursor-pointer">
-                  記住我的密碼
-                </label>
-              </div>
-            )}
-
-            {/* 成功訊息 */}
-            {success && (
-              <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm">
-                {success}
-              </div>
-            )}
+            {/* 記住我 */}
+            <div className="flex items-center">
+              <input
+                type="checkbox"
+                id="rememberMe"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+                className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+              />
+              <label htmlFor="rememberMe" className="ml-2 text-sm text-gray-700 cursor-pointer">
+                記住我的密碼
+              </label>
+            </div>
 
             {/* 錯誤訊息 */}
             {error && (
@@ -215,27 +151,11 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
                 </>
               ) : (
                 <>
-                  {isSignUp ? <UserPlus size={20} /> : <Lock size={20} />}
-                  {isSignUp ? '註冊' : '登入'}
+                  <Lock size={20} />
+                  登入
                 </>
               )}
             </button>
-
-            {/* 切換登入/註冊 */}
-            <div className="text-center">
-              <button
-                type="button"
-                onClick={() => {
-                  setIsSignUp(!isSignUp);
-                  setError('');
-                  setSuccess('');
-                }}
-                className="text-blue-600 hover:text-blue-700 text-sm font-medium"
-              >
-                {isSignUp ? '已有帳號？點此登入' : '還沒有帳號？點此註冊'}
-              </button>
-            </div>
-
           </form>
         </div>
 
