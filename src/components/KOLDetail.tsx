@@ -40,6 +40,23 @@ const KOLDetail: React.FC<KOLDetailProps> = ({ kol, collaborations, salesTrackin
   // 已完成的合作
   const completedCollaborations = collaborations.filter(c => c.status === 'completed');
 
+  // 計算該 KOL 所有專案的總分潤
+  const getTotalProfitShares = () => {
+    let totalRecords = 0;
+    let totalAmount = 0;
+    collaborations.forEach(collab => {
+      if (collab.profitShares) {
+        totalRecords += collab.profitShares.length;
+        collab.profitShares.forEach(ps => {
+          totalAmount += ps.totalAmount || ps.profitAmount + (ps.bonusAmount || 0);
+        });
+      }
+    });
+    return { totalRecords, totalAmount };
+  };
+
+  const { totalRecords, totalAmount } = getTotalProfitShares();
+
   // 取得平台圖示
   const getPlatformIcon = (platform: string, size: number = 20) => {
     const iconProps = { size };
@@ -217,34 +234,33 @@ const KOLDetail: React.FC<KOLDetailProps> = ({ kol, collaborations, salesTrackin
             <span className="text-gray-600 text-sm">總分潤金額</span>
           </div>
           <p className="text-2xl font-bold text-purple-600">
-            NT$ {kol.profitShares?.reduce((sum, ps) => sum + ps.profitAmount, 0).toLocaleString() || '0'}
+            NT$ {totalAmount.toLocaleString()}
           </p>
         </div>
       </div>
 
-      {/* 分潤記錄摘要 - 僅顯示連結 */}
-      {kol.profitShares && kol.profitShares.length > 0 && (
+      {/* 分潤記錄摘要 */}
+      {totalRecords > 0 && (
         <div className="bg-white rounded-lg shadow-md p-6">
           <h3 className="text-lg font-semibold text-gray-700 mb-3 flex items-center gap-2">
             <DollarSign className="text-green-600" size={20} />
-            分潤記錄
+            分潤記錄總覽
           </h3>
-          <div className="flex items-center justify-between bg-purple-50 border border-purple-200 rounded-lg p-4">
-            <div>
-              <p className="text-sm text-gray-600 mb-1">此 KOL 共有 {kol.profitShares.length} 筆分潤記錄</p>
-              <p className="text-lg font-bold text-purple-600">
-                總分潤金額：NT$ {kol.profitShares.reduce((sum, ps) => sum + (ps.totalAmount || ps.profitAmount), 0).toLocaleString()}
-              </p>
+          <div className="bg-gradient-to-r from-green-50 to-purple-50 border border-green-200 rounded-lg p-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <div>
+                <p className="text-sm text-gray-600 mb-1">分潤記錄總數</p>
+                <p className="text-2xl font-bold text-purple-600">{totalRecords} 筆</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600 mb-1">累計分潤金額</p>
+                <p className="text-2xl font-bold text-green-600">NT$ {totalAmount.toLocaleString()}</p>
+              </div>
             </div>
-            <button
-              onClick={onEdit}
-              className="flex items-center gap-2 bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 transition-colors"
-            >
-              <Eye size={18} />
-              查看完整分潤記錄
-            </button>
+            <p className="text-xs text-gray-500 bg-white bg-opacity-60 p-3 rounded border border-gray-200">
+              💡 <strong>提示：</strong>分潤記錄按合作專案管理。請前往「合作專案」模組查看各專案的詳細分潤記錄並進行管理。
+            </p>
           </div>
-          <p className="text-xs text-gray-500 mt-2">💡 提示：完整的分潤管理功能已移至「合作專案」模組</p>
         </div>
       )}
 

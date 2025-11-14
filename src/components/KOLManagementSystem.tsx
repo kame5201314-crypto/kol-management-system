@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { KOL, Collaboration, SalesTracking } from '../types/kol';
+import { KOL, Collaboration, SalesTracking, ProfitShareRecord, Reminder } from '../types/kol';
 import { mockKOLs, mockCollaborations, mockSalesTracking } from '../data/mockData';
 import KOLDashboard from './KOLDashboard';
 import KOLList from './KOLList';
@@ -121,6 +121,94 @@ const KOLManagementSystem = () => {
     }
   };
 
+  // 處理分潤記錄
+  const handleSaveProfitShare = (collaborationId: number, profitShareData: Partial<ProfitShareRecord>) => {
+    setCollaborations(collaborations.map(collab => {
+      if (collab.id === collaborationId) {
+        const profitShares = collab.profitShares || [];
+        if (profitShareData.id && profitShares.find(ps => ps.id === profitShareData.id)) {
+          // 更新現有分潤記錄
+          return {
+            ...collab,
+            profitShares: profitShares.map(ps =>
+              ps.id === profitShareData.id ? { ...ps, ...profitShareData } as ProfitShareRecord : ps
+            )
+          };
+        } else {
+          // 新增分潤記錄
+          return {
+            ...collab,
+            profitShares: [...profitShares, profitShareData as ProfitShareRecord]
+          };
+        }
+      }
+      return collab;
+    }));
+  };
+
+  const handleDeleteProfitShare = (collaborationId: number, profitShareId: string) => {
+    setCollaborations(collaborations.map(collab => {
+      if (collab.id === collaborationId && collab.profitShares) {
+        return {
+          ...collab,
+          profitShares: collab.profitShares.filter(ps => ps.id !== profitShareId)
+        };
+      }
+      return collab;
+    }));
+  };
+
+  // 處理提醒記錄
+  const handleSaveReminder = (collaborationId: number, reminderData: Partial<Reminder>) => {
+    setCollaborations(collaborations.map(collab => {
+      if (collab.id === collaborationId) {
+        const reminders = collab.reminders || [];
+        if (reminderData.id && reminders.find(r => r.id === reminderData.id)) {
+          // 更新現有提醒
+          return {
+            ...collab,
+            reminders: reminders.map(r =>
+              r.id === reminderData.id ? { ...r, ...reminderData } as Reminder : r
+            )
+          };
+        } else {
+          // 新增提醒
+          return {
+            ...collab,
+            reminders: [...reminders, reminderData as Reminder]
+          };
+        }
+      }
+      return collab;
+    }));
+  };
+
+  const handleDeleteReminder = (collaborationId: number, reminderId: string) => {
+    setCollaborations(collaborations.map(collab => {
+      if (collab.id === collaborationId && collab.reminders) {
+        return {
+          ...collab,
+          reminders: collab.reminders.filter(r => r.id !== reminderId)
+        };
+      }
+      return collab;
+    }));
+  };
+
+  const handleToggleReminderComplete = (collaborationId: number, reminderId: string) => {
+    setCollaborations(collaborations.map(collab => {
+      if (collab.id === collaborationId && collab.reminders) {
+        return {
+          ...collab,
+          reminders: collab.reminders.map(r =>
+            r.id === reminderId ? { ...r, isCompleted: !r.isCompleted } : r
+          )
+        };
+      }
+      return collab;
+    }));
+  };
+
   // 載入中顯示
   if (loading) {
     return (
@@ -206,6 +294,7 @@ const KOLManagementSystem = () => {
         {currentView === 'list' && (
           <KOLList
             kols={kols}
+            collaborations={collaborations}
             onAddKOL={handleAddKOL}
             onEditKOL={handleEditKOL}
             onViewKOL={handleViewKOL}
@@ -238,6 +327,11 @@ const KOLManagementSystem = () => {
             salesTracking={salesTracking}
             onSaveCollaboration={handleSaveCollaboration}
             onDeleteCollaboration={handleDeleteCollaboration}
+            onSaveProfitShare={handleSaveProfitShare}
+            onDeleteProfitShare={handleDeleteProfitShare}
+            onSaveReminder={handleSaveReminder}
+            onDeleteReminder={handleDeleteReminder}
+            onToggleReminderComplete={handleToggleReminderComplete}
           />
         )}
       </main>
