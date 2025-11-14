@@ -16,6 +16,8 @@ export type ProfitSharePeriod = 'monthly' | 'quarterly' | 'semi-annual' | 'yearl
 // 分潤記錄
 export interface ProfitShareRecord {
   id: string; // 唯一識別碼
+  collaborationId: number; // 關聯的合作專案 ID
+  kolId: number; // 關聯的 KOL ID
   settlementDate: string; // 結算日期
   period: ProfitSharePeriod; // 分潤週期：每月/每季/每年
   periodStart: string; // 開始時間
@@ -52,6 +54,22 @@ export interface KOL {
 // 合作專案狀態
 export type CollaborationStatus = 'pending' | 'negotiating' | 'confirmed' | 'in_progress' | 'completed' | 'cancelled';
 
+// 提醒類型
+export type ReminderType = 'deadline' | 'payment' | 'content_delivery' | 'follow_up' | 'other';
+
+// 提醒記錄
+export interface Reminder {
+  id: string;
+  collaborationId: number; // 關聯的合作專案 ID
+  kolId: number; // 關聯的 KOL ID
+  type: ReminderType;
+  title: string; // 提醒標題
+  description: string; // 提醒描述
+  reminderDate: string; // 提醒日期
+  isCompleted: boolean; // 是否完成
+  createdAt: string;
+}
+
 // 合作專案
 export interface Collaboration {
   id: number;
@@ -68,6 +86,8 @@ export interface Collaboration {
   platforms: ('youtube' | 'facebook' | 'instagram' | 'tiktok' | 'twitter')[]; // 合作平台
   contractUrl?: string; // 合約檔案連結
   note: string;
+  profitShares?: ProfitShareRecord[]; // 該專案的分潤記錄
+  reminders?: Reminder[]; // 該專案的提醒記錄
   createdAt: string;
   updatedAt: string;
 }

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Users, Lock, Eye, EyeOff, Mail, UserPlus } from 'lucide-react';
+import { Users, Lock, Eye, EyeOff, UserPlus } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
 interface LoginProps {
@@ -236,19 +236,6 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
               </button>
             </div>
 
-            {/* 測試帳號說明 */}
-            {!isSignUp && (
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
-                <div className="font-semibold text-blue-800 mb-2">💡 內建測試帳號</div>
-                <div className="text-sm text-blue-700 space-y-1">
-                  <div>帳號：<span className="font-mono bg-white px-2 py-1 rounded">admin</span></div>
-                  <div>密碼：<span className="font-mono bg-white px-2 py-1 rounded">mefu69563216</span></div>
-                </div>
-                <div className="text-xs text-blue-600 mt-2">
-                  直接在上方輸入即可登入
-                </div>
-              </div>
-            )}
           </form>
         </div>
 
