@@ -45,8 +45,23 @@ const CollaborationManagement: React.FC<CollaborationManagementProps> = ({
     actualCost: 0,
     deliverables: [],
     platforms: [],
+    note: '',
+    profitShares: []
+  });
+
+  // 分潤表單資料
+  const [profitShareFormData, setProfitShareFormData] = useState({
+    settlementDate: '',
+    period: 'monthly' as any,
+    periodStart: '',
+    periodEnd: '',
+    salesAmount: 0,
+    profitShareRate: 0,
+    bonusAmount: 0,
     note: ''
   });
+
+  const [showProfitShareForm, setShowProfitShareForm] = useState(false);
 
   // 篩選合作專案
   const filteredCollaborations = collaborations.filter(collab => {
@@ -63,26 +78,97 @@ const CollaborationManagement: React.FC<CollaborationManagementProps> = ({
 
   const handleAddCollaboration = () => {
     setEditingCollab(null);
+    const today = new Date().toISOString().split('T')[0];
     setFormData({
       kolId: kols.length > 0 ? kols[0].id : 0,
       projectName: '',
       productName: '',
       status: 'pending',
-      startDate: '',
+      startDate: today,
       endDate: '',
       budget: 0,
       actualCost: 0,
       deliverables: [],
       platforms: [],
+      note: '',
+      profitShares: []
+    });
+    setProfitShareFormData({
+      settlementDate: today,
+      period: 'monthly',
+      periodStart: today,
+      periodEnd: '',
+      salesAmount: 0,
+      profitShareRate: 0,
+      bonusAmount: 0,
       note: ''
     });
+    setShowProfitShareForm(false);
     setShowForm(true);
   };
 
   const handleEditCollaboration = (collab: Collaboration) => {
     setEditingCollab(collab);
     setFormData(collab);
+    setProfitShareFormData({
+      settlementDate: new Date().toISOString().split('T')[0],
+      period: 'monthly',
+      periodStart: collab.startDate,
+      periodEnd: collab.endDate,
+      salesAmount: 0,
+      profitShareRate: 0,
+      bonusAmount: 0,
+      note: ''
+    });
+    setShowProfitShareForm(false);
     setShowForm(true);
+  };
+
+  const handleAddProfitShareToForm = () => {
+    const profitAmount = (profitShareFormData.salesAmount * profitShareFormData.profitShareRate) / 100;
+    const totalAmount = profitAmount + profitShareFormData.bonusAmount;
+    const month = profitShareFormData.periodStart.substring(0, 7);
+
+    const newProfitShare: any = {
+      id: `temp-ps-${Date.now()}`,
+      settlementDate: profitShareFormData.settlementDate,
+      period: profitShareFormData.period,
+      periodStart: profitShareFormData.periodStart,
+      periodEnd: profitShareFormData.periodEnd,
+      month: month,
+      salesAmount: profitShareFormData.salesAmount,
+      profitShareRate: profitShareFormData.profitShareRate,
+      profitAmount: profitAmount,
+      bonusAmount: profitShareFormData.bonusAmount,
+      totalAmount: totalAmount,
+      note: profitShareFormData.note,
+      createdAt: new Date().toISOString()
+    };
+
+    setFormData({
+      ...formData,
+      profitShares: [...(formData.profitShares || []), newProfitShare]
+    });
+
+    // 重置表單
+    setProfitShareFormData({
+      settlementDate: new Date().toISOString().split('T')[0],
+      period: 'monthly',
+      periodStart: formData.startDate || '',
+      periodEnd: formData.endDate || '',
+      salesAmount: 0,
+      profitShareRate: 0,
+      bonusAmount: 0,
+      note: ''
+    });
+    setShowProfitShareForm(false);
+  };
+
+  const handleRemoveProfitShareFromForm = (id: string) => {
+    setFormData({
+      ...formData,
+      profitShares: formData.profitShares?.filter(ps => ps.id !== id)
+    });
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -258,6 +344,166 @@ const CollaborationManagement: React.FC<CollaborationManagementProps> = ({
               rows={3}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
+          </div>
+
+          {/* 分潤管理區塊 */}
+          <div className="border-t pt-6 mt-6">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-semibold text-gray-700 flex items-center gap-2">
+                <DollarSign className="text-green-600" size={20} />
+                分潤管理
+              </h3>
+              <button
+                type="button"
+                onClick={() => setShowProfitShareForm(!showProfitShareForm)}
+                className="flex items-center gap-2 px-3 py-1.5 bg-green-600 text-white text-sm rounded-md hover:bg-green-700 transition-colors"
+              >
+                <Plus size={16} />
+                {showProfitShareForm ? '收起' : '新增分潤'}
+              </button>
+            </div>
+
+            {/* 新增分潤表單 */}
+            {showProfitShareForm && (
+              <div className="bg-gray-50 p-4 rounded-lg mb-4 space-y-3">
+                <h4 className="font-medium text-gray-700 mb-3">新增分潤記錄</h4>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">結算日期 *</label>
+                    <input
+                      type="date"
+                      value={profitShareFormData.settlementDate}
+                      onChange={(e) => setProfitShareFormData({ ...profitShareFormData, settlementDate: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">分潤週期 *</label>
+                    <select
+                      value={profitShareFormData.period}
+                      onChange={(e) => setProfitShareFormData({ ...profitShareFormData, period: e.target.value as any })}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    >
+                      <option value="monthly">每月</option>
+                      <option value="quarterly">每季</option>
+                      <option value="semi-annual">每半年</option>
+                      <option value="yearly">每年</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">期間開始 *</label>
+                    <input
+                      type="date"
+                      value={profitShareFormData.periodStart}
+                      onChange={(e) => setProfitShareFormData({ ...profitShareFormData, periodStart: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">期間結束 *</label>
+                    <input
+                      type="date"
+                      value={profitShareFormData.periodEnd}
+                      onChange={(e) => setProfitShareFormData({ ...profitShareFormData, periodEnd: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">銷售金額 (NT$) *</label>
+                    <input
+                      type="number"
+                      value={profitShareFormData.salesAmount}
+                      onChange={(e) => setProfitShareFormData({ ...profitShareFormData, salesAmount: parseFloat(e.target.value) || 0 })}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">分潤比例 (%) *</label>
+                    <input
+                      type="number"
+                      step="0.1"
+                      value={profitShareFormData.profitShareRate}
+                      onChange={(e) => setProfitShareFormData({ ...profitShareFormData, profitShareRate: parseFloat(e.target.value) || 0 })}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">額外獎金 (NT$)</label>
+                    <input
+                      type="number"
+                      value={profitShareFormData.bonusAmount}
+                      onChange={(e) => setProfitShareFormData({ ...profitShareFormData, bonusAmount: parseFloat(e.target.value) || 0 })}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">預估分潤金額</label>
+                    <div className="w-full px-3 py-2 bg-blue-50 border border-blue-300 rounded-md text-blue-700 font-semibold">
+                      NT$ {((profitShareFormData.salesAmount * profitShareFormData.profitShareRate) / 100 + profitShareFormData.bonusAmount).toLocaleString()}
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">備註</label>
+                  <input
+                    type="text"
+                    value={profitShareFormData.note}
+                    onChange={(e) => setProfitShareFormData({ ...profitShareFormData, note: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={handleAddProfitShareToForm}
+                  className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
+                >
+                  <Plus size={20} />
+                  加入分潤記錄
+                </button>
+              </div>
+            )}
+
+            {/* 分潤記錄列表 */}
+            {formData.profitShares && formData.profitShares.length > 0 && (
+              <div className="space-y-2 mb-4">
+                <h4 className="font-medium text-gray-700">已新增的分潤記錄 ({formData.profitShares.length} 筆)</h4>
+                <div className="space-y-2">
+                  {formData.profitShares.map((ps) => (
+                    <div key={ps.id} className="flex items-center justify-between bg-green-50 border border-green-200 rounded-lg p-3">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 text-sm">
+                          <span className="font-semibold text-gray-700">
+                            {ps.periodStart} ~ {ps.periodEnd}
+                          </span>
+                          <span className="px-2 py-0.5 bg-green-600 text-white text-xs rounded">
+                            {ps.period === 'monthly' ? '每月' : ps.period === 'quarterly' ? '每季' : ps.period === 'semi-annual' ? '每半年' : '每年'}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-4 mt-1 text-sm text-gray-600">
+                          <span>銷售額: NT$ {ps.salesAmount.toLocaleString()}</span>
+                          <span>分潤率: {ps.profitShareRate}%</span>
+                          <span className="font-semibold text-green-600">總分潤: NT$ {(ps.totalAmount || 0).toLocaleString()}</span>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveProfitShareFromForm(ps.id)}
+                        className="ml-3 p-2 text-red-600 hover:bg-red-50 rounded-md transition-colors"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {formData.profitShares && formData.profitShares.length === 0 && !showProfitShareForm && (
+              <div className="text-center py-8 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
+                <p className="text-gray-500">尚未新增分潤記錄</p>
+                <p className="text-sm text-gray-400 mt-1">點擊上方「新增分潤」按鈕開始新增</p>
+              </div>
+            )}
           </div>
 
           <div className="flex gap-3 pt-4">
