@@ -57,6 +57,9 @@ export type CollaborationStatus = 'pending' | 'negotiating' | 'confirmed' | 'in_
 // 提醒類型
 export type ReminderType = 'deadline' | 'payment' | 'content_delivery' | 'follow_up' | 'other';
 
+// 提醒週期類型
+export type ReminderRecurringPeriod = 'none' | 'monthly' | 'quarterly' | 'semi-annual' | 'yearly';
+
 // 提醒記錄
 export interface Reminder {
   id: string;
@@ -66,6 +69,7 @@ export interface Reminder {
   title: string; // 提醒標題
   description: string; // 提醒描述
   reminderDate: string; // 提醒日期
+  recurringPeriod?: ReminderRecurringPeriod; // 提醒週期：無/每月/每季/每半年/每一年
   isCompleted: boolean; // 是否完成
   createdAt: string;
 }

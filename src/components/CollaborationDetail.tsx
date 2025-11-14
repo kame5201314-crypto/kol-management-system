@@ -47,7 +47,8 @@ const CollaborationDetail: React.FC<CollaborationDetailProps> = ({
     type: 'deadline' as any,
     title: '',
     description: '',
-    reminderDate: ''
+    reminderDate: '',
+    recurringPeriod: 'none' as any
   });
 
   const profitShares = collaboration.profitShares || [];
@@ -113,7 +114,8 @@ const CollaborationDetail: React.FC<CollaborationDetailProps> = ({
       type: 'deadline',
       title: '',
       description: '',
-      reminderDate: new Date().toISOString().split('T')[0]
+      reminderDate: new Date().toISOString().split('T')[0],
+      recurringPeriod: 'none'
     });
     setShowReminderForm(true);
   };
@@ -124,7 +126,8 @@ const CollaborationDetail: React.FC<CollaborationDetailProps> = ({
       type: reminder.type,
       title: reminder.title,
       description: reminder.description,
-      reminderDate: reminder.reminderDate
+      reminderDate: reminder.reminderDate,
+      recurringPeriod: reminder.recurringPeriod || 'none'
     });
     setShowReminderForm(true);
   };
@@ -174,6 +177,17 @@ const CollaborationDetail: React.FC<CollaborationDetailProps> = ({
       'other': 'bg-gray-100 text-gray-700'
     };
     return map[type] || 'bg-gray-100 text-gray-700';
+  };
+
+  const getRecurringPeriodText = (period?: string) => {
+    const map: { [key: string]: string } = {
+      'none': '無',
+      'monthly': '每月',
+      'quarterly': '每季',
+      'semi-annual': '每半年',
+      'yearly': '每一年'
+    };
+    return map[period || 'none'] || '無';
   };
 
   return (
@@ -355,10 +369,17 @@ const CollaborationDetail: React.FC<CollaborationDetailProps> = ({
                         </span>
                       </div>
                       <p className="text-sm text-gray-600 mb-2">{reminder.description}</p>
-                      <p className="text-xs text-gray-500">
-                        <Calendar size={14} className="inline mr-1" />
-                        提醒日期：{reminder.reminderDate}
-                      </p>
+                      <div className="flex items-center gap-3 text-xs text-gray-500">
+                        <span>
+                          <Calendar size={14} className="inline mr-1" />
+                          提醒日期：{reminder.reminderDate}
+                        </span>
+                        {reminder.recurringPeriod && reminder.recurringPeriod !== 'none' && (
+                          <span className="px-2 py-0.5 bg-purple-100 text-purple-700 rounded">
+                            🔁 {getRecurringPeriodText(reminder.recurringPeriod)}
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
                   <div className="flex gap-2">
@@ -559,6 +580,21 @@ const CollaborationDetail: React.FC<CollaborationDetailProps> = ({
                     onChange={(e) => setReminderFormData({ ...reminderFormData, reminderDate: e.target.value })}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">提醒週期</label>
+                  <select
+                    value={reminderFormData.recurringPeriod}
+                    onChange={(e) => setReminderFormData({ ...reminderFormData, recurringPeriod: e.target.value as any })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="none">無</option>
+                    <option value="monthly">每月</option>
+                    <option value="quarterly">每季</option>
+                    <option value="semi-annual">每半年</option>
+                    <option value="yearly">每一年</option>
+                  </select>
+                  <p className="text-xs text-gray-500 mt-1">選擇週期後，系統將自動在指定時間重複提醒</p>
                 </div>
                 <div className="flex gap-3 pt-4">
                   <button
