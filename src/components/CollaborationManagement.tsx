@@ -388,19 +388,14 @@ const CollaborationManagement: React.FC<CollaborationManagementProps> = ({
 
           {/* 分潤管理區塊 */}
           <div className="border-t pt-6 mt-6">
-            <div className="flex justify-between items-center mb-4">
+            <div className="mb-4">
               <h3 className="text-lg font-semibold text-gray-700 flex items-center gap-2">
                 <DollarSign className="text-green-600" size={20} />
                 分潤管理
               </h3>
-              <button
-                type="button"
-                onClick={() => setShowProfitShareForm(!showProfitShareForm)}
-                className="flex items-center gap-2 px-3 py-1.5 bg-green-600 text-white text-sm rounded-md hover:bg-green-700 transition-colors"
-              >
-                <Plus size={16} />
-                {showProfitShareForm ? '收起' : '新增分潤'}
-              </button>
+              <p className="text-sm text-gray-500 mt-1">
+                管理合作專案的分潤記錄
+              </p>
             </div>
 
             {/* 新增分潤表單 */}
@@ -544,11 +539,24 @@ const CollaborationManagement: React.FC<CollaborationManagementProps> = ({
             )}
 
             {formData.profitShares && formData.profitShares.length === 0 && !showProfitShareForm && (
-              <div className="text-center py-8 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
+              <div className="text-center py-8 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300 mb-4">
                 <p className="text-gray-500">尚未新增分潤記錄</p>
-                <p className="text-sm text-gray-400 mt-1">點擊上方「新增分潤」按鈕開始新增</p>
+                <p className="text-sm text-gray-400 mt-1">點擊下方「新增分潤」按鈕開始新增</p>
               </div>
             )}
+
+            {/* 新增分潤按鈕 */}
+            <button
+              type="button"
+              onClick={() => setShowProfitShareForm(!showProfitShareForm)}
+              className="w-full flex items-center justify-center gap-2 bg-green-600 text-white py-3 px-4 rounded-md hover:bg-green-700 transition-colors"
+            >
+              <Plus size={20} />
+              {showProfitShareForm ? '收起分潤表單' : '新增分潤記錄'}
+            </button>
+            <p className="text-xs text-gray-500 text-center mt-2">
+              {showProfitShareForm ? '點擊收起分潤表單' : '點擊新增此專案的分潤記錄'}
+            </p>
           </div>
 
           {/* 生成合約區塊 */}

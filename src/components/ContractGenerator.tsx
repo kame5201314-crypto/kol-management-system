@@ -10,10 +10,10 @@ interface ContractGeneratorProps {
 
 const ContractGenerator: React.FC<ContractGeneratorProps> = ({ kol, onClose }) => {
   const [variables, setVariables] = useState<ContractVariables>({
-    kolName: kol.name,
-    kolNickname: kol.nickname,
-    kolEmail: kol.email,
-    kolPhone: kol.phone,
+    kolName: '',
+    kolNickname: '',
+    kolEmail: '',
+    kolPhone: '',
     kolIdNumber: '',
     kolAddress: '',
     kolBankInfo: '',
@@ -29,7 +29,7 @@ const ContractGenerator: React.FC<ContractGeneratorProps> = ({ kol, onClose }) =
     deliveryDate: '',
     startDate: '',
     endDate: '',
-    profitPeriod: '每月',
+    profitPeriod: '',
     salesAmount: '',
     profitShareRate: '',
     bonusAmount: '',
@@ -38,7 +38,7 @@ const ContractGenerator: React.FC<ContractGeneratorProps> = ({ kol, onClose }) =
     deliverables: '',
     socialPlatforms: '',
     additionalTerms: '',
-    signDate: new Date().toISOString().split('T')[0]
+    signDate: '2025-11-15'
   });
 
   // 預設合約範本 - 育愛科技合作授權書
@@ -233,9 +233,9 @@ const ContractGenerator: React.FC<ContractGeneratorProps> = ({ kol, onClose }) =
     甲方授權簽章：                        乙方授權人簽章：
 
     {{companyName}}                       {{kolName}}
-    統一編號：{{companyId}}
-    電話：{{companyPhone}}
-    負責人：{{companyRep}}
+    統一編號：{{companyId}}               身分證/統編：{{kolIdNumber}}
+    電話：{{companyPhone}}                電話：{{kolPhone}}
+    負責人：{{companyRep}}                地址：{{kolAddress}}
     地址：{{companyAddress}}
 
 
