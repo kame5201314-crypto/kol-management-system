@@ -420,7 +420,7 @@ const KOLDetail: React.FC<KOLDetailProps> = ({ kol, collaborations, salesTrackin
                       </div>
 
                       {/* 操作按鈕 */}
-                      <div className="flex gap-2 mt-4 pt-3 border-t border-blue-200">
+                      <div className="flex justify-end gap-2 mt-4 pt-3 border-t border-blue-200">
                         {onViewCollaboration && (
                           <button
                             onClick={() => onViewCollaboration(collab)}
@@ -495,7 +495,7 @@ const KOLDetail: React.FC<KOLDetailProps> = ({ kol, collaborations, salesTrackin
                         )}
 
                         {/* 操作按鈕 */}
-                        <div className="flex gap-2 mt-4 pt-3 border-t border-gray-200">
+                        <div className="flex justify-end gap-2 mt-4 pt-3 border-t border-gray-200">
                           {onViewCollaboration && (
                             <button
                               onClick={() => onViewCollaboration(collab)}
