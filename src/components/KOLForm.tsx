@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { KOL, SocialPlatform, KOLRating, CollaborationProcess } from '../types/kol';
 import { ArrowLeft, Plus, Trash2, Youtube, Facebook, Instagram, Twitter } from 'lucide-react';
 import { FaTiktok } from 'react-icons/fa';
@@ -35,6 +35,13 @@ const KOLForm: React.FC<KOLFormProps> = ({ kol, onSave, onCancel }) => {
 
   const [newCategory, setNewCategory] = useState('');
   const [newTag, setNewTag] = useState('');
+
+  // 當 kol prop 變化時，更新表單數據
+  useEffect(() => {
+    if (kol) {
+      setFormData(kol);
+    }
+  }, [kol]);
 
   // 常用分類選項
   const categoryOptions = ['美妝', '時尚', '3C', '科技', '美食', '旅遊', '生活', '運動', '健身', '遊戲', '電競', '娛樂', '親子', '寵物', '財經', '教育'];
