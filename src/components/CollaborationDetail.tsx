@@ -259,6 +259,64 @@ const CollaborationDetail: React.FC<CollaborationDetailProps> = ({
             </div>
           </div>
         )}
+
+        {/* 合作流程資訊 */}
+        {collaboration.collaborationProcess && (
+          <div className="mt-4 pt-4 border-t">
+            <h3 className="text-md font-semibold text-gray-700 mb-3">合作流程</h3>
+            <div className="space-y-3">
+              {collaboration.collaborationProcess.negotiationStatus && (
+                <div className="p-3 bg-gray-50 rounded-lg">
+                  <p className="text-xs text-gray-500 mb-1">洽談情況</p>
+                  <p className="text-sm text-gray-700">{collaboration.collaborationProcess.negotiationStatus}</p>
+                </div>
+              )}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {collaboration.collaborationProcess.needProduct && (
+                  <div className="p-3 bg-gray-50 rounded-lg">
+                    <p className="text-xs text-gray-500 mb-1">是否需要寄商品給KOL</p>
+                    <p className="text-sm font-semibold text-gray-700">
+                      {collaboration.collaborationProcess.needProduct === 'yes' ? '✓ 需要' : '✗ 不需要'}
+                    </p>
+                  </div>
+                )}
+                {collaboration.collaborationProcess.productReturn && (
+                  <div className="p-3 bg-gray-50 rounded-lg">
+                    <p className="text-xs text-gray-500 mb-1">商品是否要收回</p>
+                    <p className="text-sm font-semibold text-gray-700">
+                      {collaboration.collaborationProcess.productReturn === 'yes' ? '✓ 需要' : '✗ 不需要'}
+                    </p>
+                  </div>
+                )}
+              </div>
+              {collaboration.collaborationProcess.collaborationDetails && (
+                <div className="p-3 bg-gray-50 rounded-lg">
+                  <p className="text-xs text-gray-500 mb-1">合作細節</p>
+                  <p className="text-sm text-gray-700">{collaboration.collaborationProcess.collaborationDetails}</p>
+                </div>
+              )}
+              {collaboration.collaborationProcess.deadline && (
+                <div className="p-3 bg-gray-50 rounded-lg">
+                  <p className="text-xs text-gray-500 mb-1">交稿期</p>
+                  <p className="text-sm text-gray-700">{collaboration.collaborationProcess.deadline}</p>
+                </div>
+              )}
+              {collaboration.collaborationProcess.resultPublication && (
+                <div className="p-3 bg-gray-50 rounded-lg">
+                  <p className="text-xs text-gray-500 mb-1">成果發布</p>
+                  <p className="text-sm text-gray-700">{collaboration.collaborationProcess.resultPublication}</p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {collaboration.note && (
+          <div className="mt-4 p-3 bg-yellow-50 border-l-4 border-yellow-400 rounded">
+            <p className="text-xs text-gray-500 mb-1">備註</p>
+            <p className="text-sm text-gray-700">{collaboration.note}</p>
+          </div>
+        )}
       </div>
 
       {/* 分潤管理 */}

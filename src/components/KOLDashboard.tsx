@@ -61,9 +61,14 @@ const KOLDashboard: React.FC<KOLDashboardProps> = ({ kols, collaborations, sales
 
   // 按分類統計 KOL
   const categoryStats = kols.reduce((acc, kol) => {
-    kol.category.forEach(cat => {
-      acc[cat] = (acc[cat] || 0) + 1;
-    });
+    // 確保 category 是陣列且不為空
+    if (Array.isArray(kol.category) && kol.category.length > 0) {
+      kol.category.forEach(cat => {
+        if (cat && cat.trim()) { // 確保分類名稱不是空字串
+          acc[cat] = (acc[cat] || 0) + 1;
+        }
+      });
+    }
     return acc;
   }, {} as Record<string, number>);
 
