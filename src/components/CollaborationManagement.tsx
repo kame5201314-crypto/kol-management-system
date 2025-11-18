@@ -816,7 +816,7 @@ const CollaborationManagement: React.FC<CollaborationManagementProps> = ({
               )}
 
               {/* 操作按鈕 */}
-              <div className="flex justify-end gap-3 mt-4 pt-4 border-t">
+              <div className="flex gap-3 mt-4 pt-4 border-t">
                 <button
                   onClick={() => handleViewCollaboration(collab)}
                   className="p-2 text-purple-600 hover:bg-purple-50 rounded-md transition-colors"
