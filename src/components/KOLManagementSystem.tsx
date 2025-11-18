@@ -8,6 +8,7 @@ import KOLForm from './KOLForm';
 import CollaborationManagement from './CollaborationManagement';
 import { Users, Briefcase, DollarSign, BarChart3 } from 'lucide-react';
 import * as kolService from '../services/kolService';
+import * as collaborationService from '../services/collaborationService';
 
 type ViewType = 'dashboard' | 'list' | 'detail' | 'form' | 'collaborations';
 
@@ -22,9 +23,10 @@ const KOLManagementSystem = () => {
   const [selectedKOL, setSelectedKOL] = useState<KOL | null>(null);
   const [editingKOL, setEditingKOL] = useState<KOL | null>(null);
 
-  // 載入 KOL 資料
+  // 載入 KOL 資料和合作專案
   useEffect(() => {
     loadKOLs();
+    loadCollaborations();
   }, []);
 
   const loadKOLs = async () => {
@@ -41,6 +43,17 @@ const KOLManagementSystem = () => {
       setError(null); // 不顯示錯誤，直接使用 mock 資料
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadCollaborations = async () => {
+    try {
+      const data = await collaborationService.getAllCollaborations();
+      setCollaborations(data);
+    } catch (err: any) {
+      console.error('載入合作專案失敗:', err);
+      // 使用 mock 資料作為備援
+      setCollaborations(mockCollaborations);
     }
   };
 
@@ -92,28 +105,33 @@ const KOLManagementSystem = () => {
     }
   };
 
-  const handleSaveCollaboration = (collabData: Partial<Collaboration>) => {
-    if (collabData.id) {
-      // 更新現有合作
-      setCollaborations(collaborations.map(c =>
-        c.id === collabData.id ? { ...c, ...collabData, updatedAt: new Date().toISOString().split('T')[0] } : c
-      ));
-    } else {
-      // 新增合作
-      const newCollab: Collaboration = {
-        id: Math.max(...collaborations.map(c => c.id), 0) + 1,
-        ...collabData as Collaboration,
-        createdAt: new Date().toISOString().split('T')[0],
-        updatedAt: new Date().toISOString().split('T')[0]
-      };
-      setCollaborations([...collaborations, newCollab]);
+  const handleSaveCollaboration = async (collabData: Partial<Collaboration>) => {
+    try {
+      if (collabData.id) {
+        // 更新現有合作
+        const updated = await collaborationService.updateCollaboration(collabData.id, collabData);
+        setCollaborations(collaborations.map(c => c.id === collabData.id ? updated : c));
+      } else {
+        // 新增合作
+        const newCollab = await collaborationService.createCollaboration(collabData as Omit<Collaboration, 'id' | 'createdAt' | 'updatedAt'>);
+        setCollaborations([...collaborations, newCollab]);
+      }
+    } catch (err: any) {
+      console.error('儲存合作專案失敗:', err);
+      alert(`儲存失敗: ${err.message}`);
     }
   };
 
-  const handleDeleteCollaboration = (id: number) => {
+  const handleDeleteCollaboration = async (id: number) => {
     if (confirm('確定要刪除此合作專案嗎？')) {
-      setCollaborations(collaborations.filter(c => c.id !== id));
-      setSalesTracking(salesTracking.filter(s => s.collaborationId !== id));
+      try {
+        await collaborationService.deleteCollaboration(id);
+        setCollaborations(collaborations.filter(c => c.id !== id));
+        setSalesTracking(salesTracking.filter(s => s.collaborationId !== id));
+      } catch (err: any) {
+        console.error('刪除合作專案失敗:', err);
+        alert(`刪除失敗: ${err.message}`);
+      }
     }
   };
 
