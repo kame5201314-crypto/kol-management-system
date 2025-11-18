@@ -224,28 +224,26 @@ const KOLList: React.FC<KOLListProps> = ({ kols, collaborations, onAddKOL, onEdi
               )}
 
               {/* 操作按鈕 */}
-              <div className="flex gap-2 pt-2">
+              <div className="flex gap-2 pt-2 justify-end">
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
                     onViewKOL(kol);
                   }}
-                  className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-purple-50 text-purple-600 rounded-md hover:bg-purple-100 transition-colors text-sm"
+                  className="flex items-center justify-center px-3 py-2 bg-purple-50 text-purple-600 rounded-md hover:bg-purple-100 transition-colors"
                   title="查看"
                 >
                   <Eye size={16} />
-                  查看
                 </button>
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
                     onEditKOL(kol);
                   }}
-                  className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-blue-50 text-blue-600 rounded-md hover:bg-blue-100 transition-colors text-sm"
+                  className="flex items-center justify-center px-3 py-2 bg-blue-50 text-blue-600 rounded-md hover:bg-blue-100 transition-colors"
                   title="編輯"
                 >
                   <Edit2 size={16} />
-                  編輯
                 </button>
                 <button
                   onClick={(e) => {
