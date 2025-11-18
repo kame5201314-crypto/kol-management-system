@@ -176,6 +176,24 @@ const CollaborationManagement: React.FC<CollaborationManagementProps> = ({
     setShowProfitShareForm(false);
   };
 
+  const handleEditProfitShareFromForm = (ps: any) => {
+    // 填入要編輯的分潤記錄到表單
+    setProfitShareFormData({
+      period: ps.period,
+      month: ps.month || new Date().getMonth() + 1,
+      periodStart: ps.periodStart,
+      periodEnd: ps.periodEnd,
+      salesAmount: ps.salesAmount,
+      profitShareRate: ps.profitShareRate,
+      bonusAmount: ps.bonusAmount || 0,
+      note: ps.note || ''
+    });
+    // 從列表中移除，等待重新添加
+    handleRemoveProfitShareFromForm(ps.id);
+    // 顯示分潤表單
+    setShowProfitShareForm(true);
+  };
+
   const handleRemoveProfitShareFromForm = (id: string) => {
     setFormData({
       ...formData,
@@ -640,15 +658,29 @@ const CollaborationManagement: React.FC<CollaborationManagementProps> = ({
                           <span>銷售額: NT$ {ps.salesAmount.toLocaleString()}</span>
                           <span>分潤率: {ps.profitShareRate}%</span>
                           <span className="font-semibold text-green-600">總分潤: NT$ {(ps.totalAmount || 0).toLocaleString()}</span>
+                          {ps.note && (
+                            <span className="text-gray-500">備註: {ps.note}</span>
+                          )}
                         </div>
                       </div>
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveProfitShareFromForm(ps.id)}
-                        className="ml-3 p-2 text-red-600 hover:bg-red-50 rounded-md transition-colors"
-                      >
-                        <Trash2 size={16} />
-                      </button>
+                      <div className="flex gap-2 ml-3">
+                        <button
+                          type="button"
+                          onClick={() => handleEditProfitShareFromForm(ps)}
+                          className="p-2 text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
+                          title="編輯"
+                        >
+                          <Edit2 size={16} />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveProfitShareFromForm(ps.id)}
+                          className="p-2 text-red-600 hover:bg-red-50 rounded-md transition-colors"
+                          title="刪除"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
                     </div>
                   ))}
                 </div>
