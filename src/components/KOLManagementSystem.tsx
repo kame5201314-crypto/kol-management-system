@@ -73,17 +73,15 @@ const KOLManagementSystem = () => {
   };
 
   const handleDeleteKOL = async (id: number) => {
-    if (confirm('確定要刪除此 KOL 嗎？')) {
-      try {
-        await kolService.deleteKOL(id);
-        setKOLs(kols.filter(k => k.id !== id));
-        // 同時刪除相關的合作專案
-        setCollaborations(collaborations.filter(c => c.kolId !== id));
-        setSalesTracking(salesTracking.filter(s => s.kolId !== id));
-      } catch (err: any) {
-        console.error('刪除 KOL 失敗:', err);
-        alert(`刪除失敗: ${err.message}`);
-      }
+    try {
+      await kolService.deleteKOL(id);
+      setKOLs(kols.filter(k => k.id !== id));
+      // 同時刪除相關的合作專案
+      setCollaborations(collaborations.filter(c => c.kolId !== id));
+      setSalesTracking(salesTracking.filter(s => s.kolId !== id));
+    } catch (err: any) {
+      console.error('刪除 KOL 失敗:', err);
+      alert(`刪除失敗: ${err.message}`);
     }
   };
 
@@ -123,15 +121,13 @@ const KOLManagementSystem = () => {
   };
 
   const handleDeleteCollaboration = async (id: number) => {
-    if (confirm('確定要刪除此合作專案嗎？')) {
-      try {
-        await collaborationService.deleteCollaboration(id);
-        setCollaborations(collaborations.filter(c => c.id !== id));
-        setSalesTracking(salesTracking.filter(s => s.collaborationId !== id));
-      } catch (err: any) {
-        console.error('刪除合作專案失敗:', err);
-        alert(`刪除失敗: ${err.message}`);
-      }
+    try {
+      await collaborationService.deleteCollaboration(id);
+      setCollaborations(collaborations.filter(c => c.id !== id));
+      setSalesTracking(salesTracking.filter(s => s.collaborationId !== id));
+    } catch (err: any) {
+      console.error('刪除合作專案失敗:', err);
+      alert(`刪除失敗: ${err.message}`);
     }
   };
 

@@ -224,7 +224,7 @@ const KOLList: React.FC<KOLListProps> = ({ kols, collaborations, onAddKOL, onEdi
               )}
 
               {/* 操作按鈕 */}
-              <div className="flex gap-2 pt-2">
+              <div className="flex gap-3 pt-2">
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
@@ -233,7 +233,7 @@ const KOLList: React.FC<KOLListProps> = ({ kols, collaborations, onAddKOL, onEdi
                   className="p-2 text-purple-600 hover:bg-purple-50 rounded-md transition-colors"
                   title="查看"
                 >
-                  <Eye size={18} />
+                  <Eye size={24} />
                 </button>
                 <button
                   onClick={(e) => {
@@ -243,17 +243,19 @@ const KOLList: React.FC<KOLListProps> = ({ kols, collaborations, onAddKOL, onEdi
                   className="p-2 text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
                   title="編輯"
                 >
-                  <Edit2 size={18} />
+                  <Edit2 size={24} />
                 </button>
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    onDeleteKOL(kol.id);
+                    if (confirm('確定要刪除此 KOL 嗎？相關的合作專案也會一併刪除。')) {
+                      onDeleteKOL(kol.id);
+                    }
                   }}
                   className="p-2 text-red-600 hover:bg-red-50 rounded-md transition-colors"
                   title="刪除"
                 >
-                  <Trash2 size={18} />
+                  <Trash2 size={20} />
                 </button>
               </div>
             </div>

@@ -758,27 +758,31 @@ const CollaborationManagement: React.FC<CollaborationManagementProps> = ({
                   <p className="text-gray-600 mb-1">商品: {collab.productName}</p>
                   <p className="text-gray-600">KOL: {getKOLName(collab.kolId)}</p>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-3">
                   <button
                     onClick={() => handleViewCollaboration(collab)}
                     className="p-2 text-purple-600 hover:bg-purple-50 rounded-md transition-colors"
                     title="查看詳情"
                   >
-                    <Eye size={18} />
+                    <Eye size={24} />
                   </button>
                   <button
                     onClick={() => handleEditCollaboration(collab)}
                     className="p-2 text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
                     title="編輯"
                   >
-                    <Edit2 size={18} />
+                    <Edit2 size={24} />
                   </button>
                   <button
-                    onClick={() => onDeleteCollaboration(collab.id)}
+                    onClick={() => {
+                      if (confirm('確定要刪除此合作專案嗎？相關的分潤記錄和提醒也會一併刪除。')) {
+                        onDeleteCollaboration(collab.id);
+                      }
+                    }}
                     className="p-2 text-red-600 hover:bg-red-50 rounded-md transition-colors"
                     title="刪除"
                   >
-                    <Trash2 size={18} />
+                    <Trash2 size={20} />
                   </button>
                 </div>
               </div>
