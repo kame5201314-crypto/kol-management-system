@@ -26,7 +26,13 @@
       "Bash(SECURITY_AUDIT_REPORT.md)",
       "Bash(npx vercel:*)",
       "Bash(nul)",
-      "Bash(printf:*)"
+      "Bash(printf:*)",
+      "Bash(gh repo create:*)",
+      "Bash(gh auth login:*)",
+      "Bash(where:*)",
+      "Bash(timeout /t 10)",
+      "Bash(npx tailwindcss:*)",
+      "Bash(git checkout:*)"
     ],
     "deny": [],
     "ask": []
