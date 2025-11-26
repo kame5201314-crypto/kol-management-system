@@ -1,5 +1,5 @@
 {
-  "name": "housekeeping",
+  "name": "kol-management-system",
   "version": 2,
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
