@@ -36,13 +36,19 @@ const KOLManagementSystem = () => {
       setLoading(true);
       setError(null);
       const data = await kolService.getAllKOLs();
-      setKOLs(data);
+      if (data && data.length > 0) {
+        setKOLs(data);
+        console.log('成功從 Supabase 載入 KOL 資料:', data.length, '筆');
+      } else {
+        console.log('Supabase 沒有資料，使用 mock 資料');
+        setKOLs(mockKOLs);
+      }
     } catch (err: any) {
       console.error('載入 KOL 資料失敗:', err);
       // 使用 mock 資料作為備援
-      console.log('使用 mock 資料');
+      console.log('使用 mock 資料作為備援');
       setKOLs(mockKOLs);
-      setError(null); // 不顯示錯誤，直接使用 mock 資料
+      setError(null);
     } finally {
       setLoading(false);
     }
