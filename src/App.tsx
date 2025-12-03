@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import KOLManagementSystem from './components/KOLManagementSystem'
 import Login from './components/Login'
 import { LogOut } from 'lucide-react'
@@ -39,24 +39,26 @@ function AppContent() {
     return <Login onLogin={handleLogin} />
   }
 
+  // KOL管理系統
   return (
     <div className="min-h-screen bg-gray-50">
       <nav className="bg-white shadow-md">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="flex items-end justify-end h-20 pb-3">
+          <div className="flex items-center justify-between h-20">
+            <h1 className="text-2xl font-bold text-blue-600">遇見未來 KOL管理系統</h1>
             <div className="flex items-center gap-4">
-              <div className="text-xl">
+              <div className="text-right">
                 <div className="font-bold text-gray-800">
                   {userName || user?.user_metadata?.username || user?.email?.split('@')[0]}
                 </div>
-                <div className="text-gray-500 text-base">{userRole || 'user'}</div>
+                <div className="text-gray-500 text-sm">{userRole || 'user'}</div>
               </div>
               <button
                 onClick={handleLogout}
-                className="flex items-center gap-2 px-4 py-3 rounded-md text-red-600 hover:bg-red-50 transition-colors text-lg"
+                className="flex items-center gap-2 px-4 py-2 rounded-md text-red-600 hover:bg-red-50 transition-colors"
                 title="登出"
               >
-                <LogOut size={22} />
+                <LogOut size={20} />
                 登出
               </button>
             </div>
