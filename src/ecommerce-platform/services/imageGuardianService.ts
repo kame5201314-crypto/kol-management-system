@@ -51,8 +51,17 @@ import type { UploadAssetResponse, ScanTaskResponse, ViolationData } from './ima
 let _isApiAvailable: boolean | null = null;
 let _apiCheckPromise: Promise<boolean> | null = null;
 
+// 強制本地模式 - 設為 true 可以完全繞過後端 API
+const FORCE_LOCAL_MODE = true;
+
 /** 檢查並快取 API 可用性 */
 async function isApiAvailable(): Promise<boolean> {
+  // 如果強制本地模式，直接返回 false
+  if (FORCE_LOCAL_MODE) {
+    console.log('[Image Guardian] 強制本地模式已啟用');
+    return false;
+  }
+
   if (_isApiAvailable !== null) {
     return _isApiAvailable;
   }
