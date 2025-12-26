@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: image-guardian-api
+    runtime: docker
+    region: singapore
+    plan: free
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: DEBUG
+        value: "false"
+      - key: CORS_ORIGINS
+        value: "https://dealer-management-system-teal.vercel.app,http://localhost:5173"
+    healthCheckPath: /api/health
