@@ -28,17 +28,7 @@ async def lifespan(app: FastAPI):
 
     # Create upload directory
     os.makedirs(settings.UPLOAD_DIR, exist_ok=True)
-
-    # Install playwright browsers if needed
-    try:
-        from playwright.async_api import async_playwright
-        async with async_playwright() as p:
-            # This will verify browsers are installed
-            pass
-        logger.info("Playwright browsers verified")
-    except Exception as e:
-        logger.warning(f"Playwright browser check failed: {e}")
-        logger.info("Run 'playwright install chromium' to install browsers")
+    logger.info(f"Upload directory: {settings.UPLOAD_DIR}")
 
     yield
 
