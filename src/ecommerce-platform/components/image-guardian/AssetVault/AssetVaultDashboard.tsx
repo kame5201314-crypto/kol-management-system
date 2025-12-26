@@ -47,7 +47,9 @@ const AssetVaultDashboard: React.FC<AssetVaultDashboardProps> = ({
 
   const loadAssets = () => {
     setIsLoading(true);
+    console.log('[Dashboard] 載入資產...');
     const loadedAssets = imageGuardianService.assets.getAll();
+    console.log(`[Dashboard] 從 storage 載入 ${loadedAssets.length} 個資產`);
     setAssets(loadedAssets);
     setIsLoading(false);
   };
@@ -67,7 +69,9 @@ const AssetVaultDashboard: React.FC<AssetVaultDashboardProps> = ({
   };
 
   const handleUploadComplete = (newAssets: DigitalAsset[]) => {
-    setAssets(prev => [...prev, ...newAssets]);
+    console.log(`[Dashboard] 上傳完成，新增 ${newAssets.length} 個資產`);
+    // 重新從 storage 載入以驗證儲存成功
+    loadAssets();
     setShowUploadModal(false);
   };
 

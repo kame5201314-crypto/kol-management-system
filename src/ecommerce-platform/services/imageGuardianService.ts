@@ -93,8 +93,15 @@ const STORAGE_KEYS = {
 function getFromStorage<T>(key: string, defaultValue: T): T {
   try {
     const stored = localStorage.getItem(key);
-    return stored ? JSON.parse(stored) : defaultValue;
-  } catch {
+    if (stored) {
+      console.log(`[Storage] 從 ${key} 讀取成功，大小: ${Math.round(stored.length / 1024)}KB`);
+      return JSON.parse(stored);
+    } else {
+      console.log(`[Storage] ${key} 為空，使用預設值`);
+      return defaultValue;
+    }
+  } catch (error) {
+    console.error(`[Storage] 讀取 ${key} 失敗:`, error);
     return defaultValue;
   }
 }
@@ -228,7 +235,9 @@ function convertApiAsset(apiAsset: UploadAssetResponse): DigitalAsset {
 export const assetService = {
   /** 獲取所有資產 */
   getAll(): DigitalAsset[] {
-    return getFromStorage(STORAGE_KEYS.ASSETS, mockDigitalAssets);
+    const assets = getFromStorage(STORAGE_KEYS.ASSETS, mockDigitalAssets);
+    console.log(`[Asset] getAll() 返回 ${assets.length} 個資產`);
+    return assets;
   },
 
   /** 從後端 API 獲取所有資產（異步） */
@@ -328,15 +337,37 @@ export const assetService = {
 
   /** 建立新資產（本地模式） */
   create(asset: Omit<DigitalAsset, 'id' | 'createdAt' | 'updatedAt'>): DigitalAsset {
+    console.log('[Asset] 開始創建資產...');
     const assets = this.getAll();
+    console.log(`[Asset] 現有資產數量: ${assets.length}`);
+
     const newAsset: DigitalAsset = {
       ...asset,
       id: generateId('asset'),
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
+
     assets.push(newAsset);
-    saveToStorage(STORAGE_KEYS.ASSETS, assets);
+    console.log(`[Asset] 新資產已添加，總數: ${assets.length}`);
+
+    const saved = saveToStorage(STORAGE_KEYS.ASSETS, assets);
+    if (!saved) {
+      console.error('[Asset] 儲存失敗！');
+      // 嘗試只保存新資產（清空舊數據）
+      console.log('[Asset] 嘗試清空舊數據後重新儲存...');
+      const singleAssetSaved = saveToStorage(STORAGE_KEYS.ASSETS, [newAsset]);
+      if (!singleAssetSaved) {
+        console.error('[Asset] 仍然無法儲存，localStorage 可能已滿');
+      }
+    } else {
+      console.log('[Asset] 資產儲存成功！');
+    }
+
+    // 驗證儲存
+    const verifyAssets = this.getAll();
+    console.log(`[Asset] 驗證：儲存後資產數量: ${verifyAssets.length}`);
+
     return newAsset;
   },
 
