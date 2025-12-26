@@ -1,0 +1,33 @@
+# Web 框架
+fastapi==0.109.0
+uvicorn==0.27.0
+python-multipart==0.0.6
+
+# 圖片處理
+opencv-python-headless==4.9.0.80
+imagehash==4.3.1
+pillow==10.2.0
+numpy==1.26.3
+
+# 爬蟲
+playwright==1.41.0
+beautifulsoup4==4.12.3
+httpx==0.26.0
+fake-useragent==1.4.0
+
+# 資料庫
+supabase==2.3.4
+python-dotenv==1.0.0
+
+# 截圖與 PDF
+reportlab==4.0.9
+
+# 工具
+pydantic==2.5.3
+
+# Gemini AI (圖片智慧比對)
+google-generativeai==0.8.3
+
+# 任務佇列 (可選)
+# celery==5.3.6
+# redis==5.0.1

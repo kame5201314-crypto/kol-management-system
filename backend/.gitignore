@@ -37,3 +37,18 @@ coverage/
 # Temporary files
 tmp/
 temp/
+
+# Windows reserved names
+nul
+NUL
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+*.egg-info/

@@ -1,0 +1,19 @@
+# Gmail Invoice Automation - Dependencies
+# 發票自動化下載工具依賴
+
+# Gmail API
+simplegmail>=4.1.1
+google-auth>=2.23.0
+google-auth-oauthlib>=1.1.0
+google-auth-httplib2>=0.1.1
+
+# PDF 處理
+pdfplumber>=0.10.0
+PyPDF2>=3.0.0
+
+# 圖片 OCR (可選，用於掃描發票)
+# pytesseract>=0.3.10
+# Pillow>=10.0.0
+
+# 未來擴展：OpenAI API (高精準度抽取)
+# openai>=1.0.0

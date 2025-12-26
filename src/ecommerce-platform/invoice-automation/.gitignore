@@ -1,0 +1,24 @@
+# Gmail 憑證（敏感資訊，勿上傳）
+client_secret.json
+gmail_token.json
+*.pickle
+
+# 下載的附件
+downloads/
+attachments/
+
+# 日誌
+logs/
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.env
+venv/
+.venv/
+
+# IDE
+.vscode/
+.idea/

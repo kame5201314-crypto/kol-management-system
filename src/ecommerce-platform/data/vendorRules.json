@@ -1,0 +1,182 @@
+{
+  "_description": "供應商學習規則 - Vendor Learning Rules",
+  "_usage": "當 OCR 識別到供應商名稱時，自動套用對應的預設類別",
+  "_lastUpdated": "2025-01-01",
+  "rules": {
+    "7-ELEVEN": {
+      "category": "meals",
+      "categoryLabel": "餐飲費",
+      "confidence": 0.9,
+      "aliases": ["7-11", "統一超商", "SEVEN ELEVEN"],
+      "notes": "便利商店消費"
+    },
+    "全家": {
+      "category": "meals",
+      "categoryLabel": "餐飲費",
+      "confidence": 0.9,
+      "aliases": ["全家便利商店", "FamilyMart", "Family Mart"],
+      "notes": "便利商店消費"
+    },
+    "全聯福利中心": {
+      "category": "meals",
+      "categoryLabel": "餐飲費",
+      "confidence": 0.85,
+      "aliases": ["全聯", "PX Mart", "PXMART"],
+      "notes": "超市採購"
+    },
+    "PChome": {
+      "category": "office_supplies",
+      "categoryLabel": "辦公用品",
+      "confidence": 0.8,
+      "aliases": ["PChome24h", "PChome 24h購物", "網路家庭"],
+      "notes": "網購平台 - 通常為辦公用品"
+    },
+    "momo購物": {
+      "category": "office_supplies",
+      "categoryLabel": "辦公用品",
+      "confidence": 0.8,
+      "aliases": ["momo", "富邦媒體", "momo購物網"],
+      "notes": "網購平台"
+    },
+    "蝦皮購物": {
+      "category": "office_supplies",
+      "categoryLabel": "辦公用品",
+      "confidence": 0.75,
+      "aliases": ["蝦皮", "Shopee", "shopee"],
+      "notes": "網購平台"
+    },
+    "AWS": {
+      "category": "professional",
+      "categoryLabel": "專業服務",
+      "confidence": 0.95,
+      "aliases": ["Amazon Web Services", "Amazon AWS"],
+      "notes": "雲端服務"
+    },
+    "Google Cloud": {
+      "category": "professional",
+      "categoryLabel": "專業服務",
+      "confidence": 0.95,
+      "aliases": ["GCP", "Google Cloud Platform", "谷歌雲端"],
+      "notes": "雲端服務"
+    },
+    "Microsoft Azure": {
+      "category": "professional",
+      "categoryLabel": "專業服務",
+      "confidence": 0.95,
+      "aliases": ["Azure", "微軟雲端"],
+      "notes": "雲端服務"
+    },
+    "Meta 廣告": {
+      "category": "marketing",
+      "categoryLabel": "行銷費用",
+      "confidence": 0.95,
+      "aliases": ["Facebook Ads", "FB廣告", "Instagram Ads", "IG廣告", "Meta Ads"],
+      "notes": "社群廣告"
+    },
+    "Google Ads": {
+      "category": "marketing",
+      "categoryLabel": "行銷費用",
+      "confidence": 0.95,
+      "aliases": ["Google 廣告", "AdWords", "谷歌廣告"],
+      "notes": "關鍵字廣告"
+    },
+    "LINE 廣告": {
+      "category": "marketing",
+      "categoryLabel": "行銷費用",
+      "confidence": 0.95,
+      "aliases": ["LINE Ads", "LINE廣告平台"],
+      "notes": "LINE 廣告投放"
+    },
+    "中華電信": {
+      "category": "utilities",
+      "categoryLabel": "水電費",
+      "confidence": 0.9,
+      "aliases": ["CHT", "Chunghwa Telecom"],
+      "notes": "電信費用"
+    },
+    "台灣大哥大": {
+      "category": "utilities",
+      "categoryLabel": "水電費",
+      "confidence": 0.9,
+      "aliases": ["台哥大", "Taiwan Mobile"],
+      "notes": "電信費用"
+    },
+    "遠傳電信": {
+      "category": "utilities",
+      "categoryLabel": "水電費",
+      "confidence": 0.9,
+      "aliases": ["遠傳", "Far EasTone"],
+      "notes": "電信費用"
+    },
+    "台灣電力公司": {
+      "category": "utilities",
+      "categoryLabel": "水電費",
+      "confidence": 0.95,
+      "aliases": ["台電", "Taipower"],
+      "notes": "電費"
+    },
+    "台灣自來水公司": {
+      "category": "utilities",
+      "categoryLabel": "水電費",
+      "confidence": 0.95,
+      "aliases": ["台水", "自來水公司"],
+      "notes": "水費"
+    },
+    "IKEA": {
+      "category": "equipment",
+      "categoryLabel": "設備",
+      "confidence": 0.85,
+      "aliases": ["宜家", "宜家家居"],
+      "notes": "家具設備"
+    },
+    "Uber": {
+      "category": "transportation",
+      "categoryLabel": "交通費",
+      "confidence": 0.9,
+      "aliases": ["Uber Taiwan", "優步"],
+      "notes": "叫車服務"
+    },
+    "Uber Eats": {
+      "category": "meals",
+      "categoryLabel": "餐飲費",
+      "confidence": 0.9,
+      "aliases": ["UberEats", "優食"],
+      "notes": "外送餐飲"
+    },
+    "foodpanda": {
+      "category": "meals",
+      "categoryLabel": "餐飲費",
+      "confidence": 0.9,
+      "aliases": ["熊貓外送", "空腹熊貓"],
+      "notes": "外送餐飲"
+    },
+    "台灣高鐵": {
+      "category": "transportation",
+      "categoryLabel": "交通費",
+      "confidence": 0.95,
+      "aliases": ["高鐵", "THSR", "Taiwan High Speed Rail"],
+      "notes": "高鐵票"
+    },
+    "台鐵": {
+      "category": "transportation",
+      "categoryLabel": "交通費",
+      "confidence": 0.95,
+      "aliases": ["台灣鐵路", "TRA"],
+      "notes": "火車票"
+    },
+    "黑貓宅急便": {
+      "category": "shipping",
+      "categoryLabel": "運費",
+      "confidence": 0.9,
+      "aliases": ["黑貓", "宅急便", "統一速達"],
+      "notes": "宅配運費"
+    },
+    "順豐速運": {
+      "category": "shipping",
+      "categoryLabel": "運費",
+      "confidence": 0.9,
+      "aliases": ["順豐", "SF Express"],
+      "notes": "快遞運費"
+    }
+  }
+}

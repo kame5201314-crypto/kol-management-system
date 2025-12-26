@@ -1,3 +1,11 @@
+# ====================================
+# Security First - 資安優先配置
+# ====================================
+
+# Windows reserved names
+nul
+NUL
+
 # Dependencies
 node_modules/
 /.pnp
@@ -34,15 +42,120 @@ pnpm-debug.log*
 *.sln
 *.sw?
 
-# Environment variables
-.env
+# ====================================
+# 機密檔案 (嚴禁提交)
+# ====================================
 
+# Environment variables - 所有環境變數檔案
+.env
+.env.*
+!.env.example
+
+# API Keys & Secrets
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+secrets.json
+credentials.json
+service-account*.json
+firebase-adminsdk*.json
+
+# Database
+*.sql
+*.sqlite
+*.db
+database.yml
+db-config.json
+
+# Authentication tokens
+.npmrc
+.yarnrc
+auth.json
+token.json
+
+# ====================================
 # Claude Code local settings
+# ====================================
 .claude/settings.local.json
+
+# ====================================
+# Deployment
+# ====================================
+.vercel
+.netlify
+.serverless
 
 # Lock files (optional, uncomment if needed)
 # package-lock.json
 # yarn.lock
 # pnpm-lock.yaml
 
-.vercel
+# ====================================
+# Temporary & Cache
+# ====================================
+*.tmp
+*.temp
+*.cache
+.cache/
+tmp/
+temp/
+
+# Audit reports (may contain sensitive info)
+npm-audit.json
+security-audit.json
+audit-logs.json
+*.audit.log
+
+# ====================================
+# Security Specific
+# ====================================
+
+# OAuth & Gmail API credentials
+client_secret*.json
+oauth_token.json
+gmail_token.json
+gmail_credentials.json
+
+# Vendor rules with sensitive data
+vendor_rules_local.json
+
+# Downloaded invoices (may contain PII)
+downloaded_invoices/
+invoice_backup/
+
+# Password hashes
+*.hash
+password_hashes.json
+
+# Session data
+sessions/
+*.session
+
+# Encryption keys
+*.aes
+*.rsa
+encryption_key.txt
+
+# Backup files
+*.bak
+*.backup
+*~
+
+# ====================================
+# Python (for invoice automation)
+# ====================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+.venv/
+ENV/
+env/
+*.egg-info/
+.eggs/
+pip-log.txt
+pip-delete-this-directory.txt
