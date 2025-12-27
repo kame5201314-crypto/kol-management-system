@@ -69,7 +69,9 @@
       "Bash(C:Usersuser.flybinflyctl.exe version)",
       "Bash(gh repo rename:*)",
       "Bash(gh repo view:*)",
-      "Bash(gh repo list:*)"
+      "Bash(gh repo list:*)",
+      "Bash(git clone:*)",
+      "Bash(git -C \"c:\\\\Users\\\\user\\\\Desktop\\\\dealer-management-system-project\\\\dealer-management-system\" status)"
     ],
     "deny": [],
     "ask": []

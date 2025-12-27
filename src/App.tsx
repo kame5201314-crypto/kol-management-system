@@ -1,28 +1,47 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import AffiliateApp from './affiliate-marketing/AffiliateApp'
-import LensDemoApp from './lens-demo/LensDemoApp'
-import ImageProcessorApp from './image-processor/ImageProcessorApp'
-import GamePage from './pages/GamePage'
-import EcommercePlatformApp from './ecommerce-platform/EcommercePlatformApp'
+import KOLManagementSystem from './components/KOLManagementSystem'
+import Login from './components/Login'
+import { LogOut } from 'lucide-react'
+import { AuthProvider, useAuth } from './contexts/AuthContext'
 
-// 主入口 - 包含多個子系統
+function AppContent() {
+  const { user, signOut } = useAuth()
+
+  if (!user) {
+    return <Login onLogin={() => {}} />
+  }
+
+  // 取得用戶顯示名稱
+  const displayName = 'username' in user ? user.username : user.email
+
+  return (
+    <div className="min-h-screen bg-gray-100">
+      {/* 頂部導航列 */}
+      <div className="bg-white shadow-sm border-b">
+        <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+          <h1 className="text-xl font-bold text-gray-800">KOL 管理系統</h1>
+          <div className="flex items-center gap-4">
+            <span className="text-sm text-gray-600">歡迎，{displayName}</span>
+            <button
+              onClick={signOut}
+              className="flex items-center gap-1 px-3 py-1.5 text-sm text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors"
+            >
+              <LogOut className="w-4 h-4" />
+              登出
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* 主要內容 */}
+      <KOLManagementSystem />
+    </div>
+  )
+}
+
 export default function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        {/* 預設導向 Image Guardian */}
-        <Route path="/" element={<Navigate to="/ecommerce/image-guardian" replace />} />
-        {/* 2D RPG 遊戲 */}
-        <Route path="/game" element={<GamePage />} />
-        {/* 圖片批量處理工具 */}
-        <Route path="/image-processor/*" element={<ImageProcessorApp />} />
-        {/* 官網鏡頭互動工具 */}
-        <Route path="/lens-demo/*" element={<LensDemoApp />} />
-        {/* 電商多功能平台 */}
-        <Route path="/ecommerce/*" element={<EcommercePlatformApp />} />
-        {/* 聯盟行銷系統 */}
-        <Route path="/affiliate/*" element={<AffiliateApp />} />
-      </Routes>
-    </BrowserRouter>
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   )
 }
