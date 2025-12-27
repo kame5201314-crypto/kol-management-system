@@ -52,7 +52,8 @@ let _isApiAvailable: boolean | null = null;
 let _apiCheckPromise: Promise<boolean> | null = null;
 
 // 強制本地模式 - 設為 true 可以完全繞過後端 API
-const FORCE_LOCAL_MODE = true;
+// 設為 false 時會嘗試連接真實後端 API
+const FORCE_LOCAL_MODE = false;
 
 /** 檢查並快取 API 可用性 */
 async function isApiAvailable(): Promise<boolean> {
