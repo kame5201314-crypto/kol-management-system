@@ -44,6 +44,8 @@ export const mockKOLs: KOL[] = [
     profitShares: [
       {
         id: '1001',
+        collaborationId: 1,
+        kolId: 1,
         settlementDate: '2025-01-05',
         period: 'monthly',
         periodStart: '2024-12-01',
@@ -56,6 +58,8 @@ export const mockKOLs: KOL[] = [
       },
       {
         id: '1002',
+        collaborationId: 1,
+        kolId: 1,
         settlementDate: '2025-04-10',
         period: 'quarterly',
         periodStart: '2025-01-01',
@@ -68,6 +72,8 @@ export const mockKOLs: KOL[] = [
       },
       {
         id: '1003',
+        collaborationId: 1,
+        kolId: 1,
         settlementDate: '2025-10-15',
         period: 'monthly',
         periodStart: '2025-09-01',
@@ -116,6 +122,8 @@ export const mockKOLs: KOL[] = [
     profitShares: [
       {
         id: '2001',
+        collaborationId: 2,
+        kolId: 2,
         settlementDate: '2025-07-15',
         period: 'yearly',
         periodStart: '2024-07-01',

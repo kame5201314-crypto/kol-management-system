@@ -4,6 +4,8 @@ export interface SocialPlatform {
   handle: string; // 帳號名稱
   url: string;
   followers: number; // 粉絲數
+  engagement?: number; // 互動率 (%)
+  avgViews?: number; // 平均觀看數
   lastUpdated: string; // 最後更新日期
 }
 

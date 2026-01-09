@@ -30,6 +30,7 @@ export interface KOLProfile {
     line?: string;
   };
   totalSales: number;
+  totalOrders: number;
   totalCommission: number;
   pendingCommission: number;
   joinDate: string;
@@ -66,10 +67,13 @@ export interface ImportedOrder {
   quantity: number;
   unitPrice: number;
   totalAmount: number;
+  promoCode?: string;
   promoCodeUsed?: string;
   orderStatus: OrderStatus;
-  matchedKolId?: string;
-  matchedKolName?: string;
+  matchedKOLId?: string;
+  matchedKolId?: string; // 別名
+  matchedKOLName?: string;
+  matchedKolName?: string; // 別名
   commissionAmount?: number;
   importBatchId: string;
   importedAt: string;
@@ -95,12 +99,15 @@ export interface CommissionRecord {
   id: string;
   kolId: string;
   kolName: string;
+  period?: string; // 顯示用週期標籤
   periodStart: string;
   periodEnd: string;
   totalOrders: number;
+  ordersCount: number; // 訂單數量別名
   validOrders: number; // 排除取消/退貨
   grossSales: number;
   netSales: number; // 扣除取消/退貨後
+  totalSales: number; // 總銷售額別名
   commissionRate: number;
   commissionAmount: number;
   adjustments?: number;

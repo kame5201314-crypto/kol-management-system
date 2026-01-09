@@ -356,6 +356,7 @@ const KOLManagementSystem = () => {
             onDeleteProfitShare={handleDeleteProfitShare}
             onSaveReminder={handleSaveReminder}
             onDeleteReminder={handleDeleteReminder}
+            onToggleReminderComplete={handleToggleReminderComplete}
           />
         )}
 

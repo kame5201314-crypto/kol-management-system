@@ -239,7 +239,7 @@ export default function MonthlyArchive() {
                   </div>
                   <div className="text-center">
                     <p className="text-2xl font-bold text-yellow-600">
-                      {archive.byStatus.find(s => s.status === 'pending')?.count || 0}
+                      {archive.byStatus.find(s => s.status === 'pending_review')?.count || 0}
                     </p>
                     <p className="text-sm text-gray-500">待審核</p>
                   </div>

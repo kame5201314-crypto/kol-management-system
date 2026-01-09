@@ -24,11 +24,12 @@ import {
   PLATFORM_LABELS
 } from '../../../types/imageGuardian';
 import { imageGuardianService } from '../../../services/imageGuardianService';
-import WhitelistManager from './WhitelistManager';
+import WhitelistManager, { WhitelistAddModal } from './WhitelistManager';
 
 interface AssetDetailProps {
   asset: DigitalAsset;
   onClose: () => void;
+  onDelete?: (assetId: string) => void | Promise<void>;
   onStartScan?: (assetId: string) => void;
   onViewViolation?: (violation: Violation) => void;
 }
@@ -360,13 +361,11 @@ const AssetDetail: React.FC<AssetDetailProps> = ({
         </div>
 
         {/* 白名單 Modal */}
-        {showWhitelistModal && (
-          <WhitelistManager
-            assetId={asset.id}
-            onAdd={handleWhitelistAdd}
-            onClose={() => setShowWhitelistModal(false)}
-          />
-        )}
+        <WhitelistAddModal
+          isOpen={showWhitelistModal}
+          onAdd={handleWhitelistAdd}
+          onClose={() => setShowWhitelistModal(false)}
+        />
       </div>
     </div>
   );
