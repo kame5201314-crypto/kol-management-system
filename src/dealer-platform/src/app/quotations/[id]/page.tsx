@@ -75,28 +75,15 @@ export default async function QuotationDetailPage({
               </Badge>
             </div>
             <div className="flex items-center space-x-2">
+              <QuotationActionButtons quotationId={quotation.id} status={quotation.status} />
               {quotation.status === 'draft' && (
-                <Button>
-                  <Send className="w-4 h-4 mr-2" />
-                  發送報價
-                </Button>
-              )}
-              {quotation.status === 'sent' && (
-                <>
+                <Link href={`/quotations/${quotation.id}/edit`}>
                   <Button variant="outline">
-                    <XCircle className="w-4 h-4 mr-2" />
-                    標記拒絕
+                    <Edit className="w-4 h-4 mr-2" />
+                    編輯
                   </Button>
-                  <Button>
-                    <CheckCircle className="w-4 h-4 mr-2" />
-                    標記成交
-                  </Button>
-                </>
+                </Link>
               )}
-              <Button variant="outline">
-                <Copy className="w-4 h-4 mr-2" />
-                複製
-              </Button>
               <Button variant="outline">
                 <FileText className="w-4 h-4 mr-2" />
                 列印

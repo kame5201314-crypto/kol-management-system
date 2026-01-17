@@ -189,6 +189,127 @@ export async function createQuotation(
 }
 
 /**
+ * 更新報價單
+ */
+export async function updateQuotation(
+  id: string,
+  formData: FormData,
+  items: Array<{
+    product_code: string
+    product_name: string
+    description?: string
+    unit: string
+    quantity: number
+    unit_price: number
+    discount_percent?: number
+  }>
+): Promise<ApiResponse<Quotation>> {
+  try {
+    const supabase = await createClient()
+    const orgId = await getCurrentOrgId()
+    const userId = await getCurrentUserId()
+
+    // 確認只能編輯草稿狀態
+    const { data: existingQuotation } = await supabase
+      .from('quotations')
+      .select('status')
+      .eq('id', id)
+      .eq('org_id', orgId)
+      .single()
+
+    if (existingQuotation?.status !== 'draft') {
+      return { success: false, error: '只能編輯草稿狀態的報價單' }
+    }
+
+    // 計算金額
+    const subtotal = items.reduce((sum, item) => {
+      const discountMultiplier = 1 - (item.discount_percent ?? 0) / 100
+      return sum + (item.quantity * item.unit_price * discountMultiplier)
+    }, 0)
+
+    const discountPercent = parseFloat(formData.get('discount_percent') as string) || 0
+    const discountAmount = subtotal * (discountPercent / 100)
+    const taxRate = parseFloat(formData.get('tax_rate') as string) || 5
+    const taxableAmount = subtotal - discountAmount
+    const taxAmount = taxableAmount * (taxRate / 100)
+    const totalAmount = taxableAmount + taxAmount
+
+    const quotationData = {
+      customer_name: formData.get('customer_name') as string,
+      customer_contact: formData.get('customer_contact') as string || null,
+      customer_email: formData.get('customer_email') as string || null,
+      customer_phone: formData.get('customer_phone') as string || null,
+      customer_address: formData.get('customer_address') as string || null,
+      quote_date: formData.get('quote_date') as string || new Date().toISOString().split('T')[0],
+      valid_until: formData.get('valid_until') as string || null,
+      currency: formData.get('currency') as string || 'TWD',
+      subtotal,
+      discount_percent: discountPercent,
+      discount_amount: discountAmount,
+      tax_rate: taxRate,
+      tax_amount: taxAmount,
+      total_amount: totalAmount,
+      payment_terms: formData.get('payment_terms') as string || null,
+      delivery_terms: formData.get('delivery_terms') as string || null,
+      notes: formData.get('notes') as string || null,
+      internal_notes: formData.get('internal_notes') as string || null,
+      updated_by: userId,
+    }
+
+    const { data: quotation, error: quotationError } = await supabase
+      .from('quotations')
+      .update(quotationData)
+      .eq('id', id)
+      .eq('org_id', orgId)
+      .select()
+      .single()
+
+    if (quotationError) throw quotationError
+
+    // 刪除舊明細
+    await supabase
+      .from('quotation_items')
+      .update({ is_deleted: true, deleted_at: new Date().toISOString(), updated_by: userId })
+      .eq('quotation_id', id)
+
+    // 新增新明細
+    const itemsData = items.map((item, index) => {
+      const discountMultiplier = 1 - (item.discount_percent ?? 0) / 100
+      const amount = item.quantity * item.unit_price * discountMultiplier
+
+      return {
+        org_id: orgId,
+        quotation_id: id,
+        line_number: index + 1,
+        product_code: item.product_code,
+        product_name: item.product_name,
+        description: item.description || null,
+        unit: item.unit,
+        quantity: item.quantity,
+        unit_price: item.unit_price,
+        discount_percent: item.discount_percent ?? 0,
+        amount,
+        created_by: userId,
+        updated_by: userId,
+      }
+    })
+
+    const { error: itemsError } = await supabase
+      .from('quotation_items')
+      .insert(itemsData)
+
+    if (itemsError) throw itemsError
+
+    revalidatePath('/quotations')
+    revalidatePath(`/quotations/${id}`)
+    return { success: true, data: quotation as Quotation, message: '報價單更新成功' }
+  } catch (error) {
+    console.error('updateQuotation error:', error)
+    return { success: false, error: '更新報價單失敗' }
+  }
+}
+
+/**
  * 更新報價單狀態
  */
 export async function updateQuotationStatus(

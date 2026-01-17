@@ -4,6 +4,7 @@ import {
   ShoppingCart,
   Truck,
   FileText,
+  Package,
   BarChart3,
   ArrowRight
 } from 'lucide-react'
@@ -15,6 +16,13 @@ const features = [
     icon: Users,
     href: '/suppliers',
     color: 'bg-blue-500',
+  },
+  {
+    title: '產品管理',
+    description: '產品目錄、分類管理、價格維護',
+    icon: Package,
+    href: '/products',
+    color: 'bg-cyan-500',
   },
   {
     title: '採購單管理',
@@ -83,7 +91,7 @@ export default function HomePage() {
         </div>
 
         {/* Feature Cards */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 mb-12">
           {features.map((feature) => (
             <Link
               key={feature.title}
