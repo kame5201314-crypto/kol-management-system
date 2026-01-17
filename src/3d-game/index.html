@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D RPG 遊戲原型 - 天堂風格</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Microsoft JhengHei', 'Segoe UI', sans-serif;
+        }
+
+        #gameCanvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        /* 遊戲 UI 覆蓋層 */
+        #gameUI {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        /* 玩家狀態面板 */
+        #playerStatus {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: linear-gradient(180deg, rgba(20, 20, 40, 0.9) 0%, rgba(10, 10, 30, 0.85) 100%);
+            border: 2px solid #4a4a6a;
+            border-radius: 10px;
+            padding: 15px;
+            min-width: 250px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .player-name {
+            color: #ffd700;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .player-level {
+            color: #aaa;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+
+        .stat-bar {
+            margin: 8px 0;
+        }
+
+        .stat-label {
+            display: flex;
+            justify-content: space-between;
+            color: #ccc;
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        .bar-container {
+            height: 18px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 9px;
+            overflow: hidden;
+            border: 1px solid #333;
+        }
+
+        .bar-fill {
+            height: 100%;
+            border-radius: 8px;
+            transition: width 0.3s ease;
+            position: relative;
+        }
+
+        .bar-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(180deg, rgba(255,255,255,0.3) 0%, transparent 100%);
+            border-radius: 8px 8px 0 0;
+        }
+
+        .hp-bar {
+            background: linear-gradient(90deg, #8b0000 0%, #ff4444 50%, #ff6666 100%);
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+        }
+
+        .mp-bar {
+            background: linear-gradient(90deg, #000080 0%, #4444ff 50%, #6666ff 100%);
+            box-shadow: 0 0 10px rgba(0, 100, 255, 0.5);
+        }
+
+        .exp-bar {
+            background: linear-gradient(90deg, #806600 0%, #ffcc00 50%, #ffdd44 100%);
+            box-shadow: 0 0 10px rgba(255, 200, 0, 0.5);
+        }
+
+        /* 技能欄 */
+        #skillBar {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            background: linear-gradient(180deg, rgba(30, 30, 50, 0.95) 0%, rgba(15, 15, 35, 0.9) 100%);
+            padding: 12px 20px;
+            border-radius: 15px;
+            border: 2px solid #5a5a7a;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.6);
+            pointer-events: auto;
+        }
+
+        .skill-slot {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(145deg, #2a2a4a 0%, #1a1a3a 100%);
+            border: 2px solid #4a4a6a;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+            overflow: hidden;
+        }
+
+        .skill-slot:hover {
+            border-color: #7a7aaa;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(100, 100, 200, 0.4);
+        }
+
+        .skill-slot.on-cooldown {
+            opacity: 0.6;
+        }
+
+        .skill-slot.active {
+            border-color: #ffd700;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+        }
+
+        .skill-icon {
+            font-size: 28px;
+        }
+
+        .skill-key {
+            position: absolute;
+            bottom: 2px;
+            right: 4px;
+            font-size: 11px;
+            color: #888;
+            font-weight: bold;
+        }
+
+        .skill-cooldown {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .skill-name {
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            font-size: 11px;
+            color: #aaa;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .skill-slot:hover .skill-name {
+            opacity: 1;
+        }
+
+        /* 目標資訊 */
+        #targetInfo {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(180deg, rgba(40, 20, 20, 0.9) 0%, rgba(30, 10, 10, 0.85) 100%);
+            border: 2px solid #8b4444;
+            border-radius: 10px;
+            padding: 12px 20px;
+            min-width: 200px;
+            text-align: center;
+            display: none;
+            box-shadow: 0 4px 20px rgba(139, 0, 0, 0.4);
+        }
+
+        #targetInfo.visible {
+            display: block;
+        }
+
+        .target-name {
+            color: #ff6666;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        /* 傷害數字 */
+        .damage-number {
+            position: absolute;
+            font-weight: bold;
+            font-size: 24px;
+            color: #ff4444;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8), 0 0 10px rgba(255, 0, 0, 0.5);
+            pointer-events: none;
+            animation: damageFloat 1s ease-out forwards;
+            z-index: 1000;
+        }
+
+        .damage-number.critical {
+            font-size: 32px;
+            color: #ffd700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8), 0 0 15px rgba(255, 215, 0, 0.8);
+        }
+
+        .damage-number.heal {
+            color: #44ff44;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8), 0 0 10px rgba(0, 255, 0, 0.5);
+        }
+
+        @keyframes damageFloat {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            50% {
+                opacity: 1;
+                transform: translateY(-30px) scale(1.2);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-60px) scale(0.8);
+            }
+        }
+
+        /* 迷你地圖 */
+        #minimap {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 180px;
+            height: 180px;
+            background: rgba(10, 10, 30, 0.85);
+            border: 2px solid #4a4a6a;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        #minimapCanvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* 戰鬥訊息 */
+        #combatLog {
+            position: absolute;
+            bottom: 120px;
+            left: 20px;
+            width: 300px;
+            max-height: 150px;
+            overflow-y: auto;
+            background: rgba(10, 10, 30, 0.7);
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 12px;
+        }
+
+        .combat-message {
+            color: #aaa;
+            margin: 4px 0;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .combat-message.damage {
+            color: #ff6666;
+        }
+
+        .combat-message.skill {
+            color: #66aaff;
+        }
+
+        .combat-message.exp {
+            color: #ffcc00;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* 載入畫面 */
+        #loadingScreen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        #loadingScreen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-title {
+            font-size: 48px;
+            color: #ffd700;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+            margin-bottom: 30px;
+            letter-spacing: 8px;
+        }
+
+        .loading-bar-container {
+            width: 400px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .loading-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #ffd700, #ffaa00);
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 4px;
+        }
+
+        .loading-text {
+            color: #888;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        /* 控制說明 */
+        #controls {
+            position: absolute;
+            bottom: 120px;
+            right: 20px;
+            background: rgba(10, 10, 30, 0.8);
+            border-radius: 10px;
+            padding: 15px;
+            font-size: 12px;
+            color: #888;
+        }
+
+        #controls h4 {
+            color: #ffd700;
+            margin-bottom: 10px;
+        }
+
+        #controls div {
+            margin: 5px 0;
+        }
+
+        #controls span {
+            color: #66aaff;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <!-- 載入畫面 -->
+    <div id="loadingScreen">
+        <div class="loading-title">天堂傳說</div>
+        <div class="loading-bar-container">
+            <div class="loading-bar" id="loadingBar"></div>
+        </div>
+        <div class="loading-text" id="loadingText">載入中...</div>
+    </div>
+
+    <!-- 遊戲畫布 -->
+    <canvas id="gameCanvas"></canvas>
+
+    <!-- 遊戲 UI -->
+    <div id="gameUI">
+        <!-- 玩家狀態 -->
+        <div id="playerStatus">
+            <div class="player-name">
+                勇者 <span class="player-level">Lv.<span id="playerLevel">1</span></span>
+            </div>
+            <div class="stat-bar">
+                <div class="stat-label">
+                    <span>HP</span>
+                    <span><span id="currentHP">100</span> / <span id="maxHP">100</span></span>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-fill hp-bar" id="hpBar" style="width: 100%"></div>
+                </div>
+            </div>
+            <div class="stat-bar">
+                <div class="stat-label">
+                    <span>MP</span>
+                    <span><span id="currentMP">50</span> / <span id="maxMP">50</span></span>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-fill mp-bar" id="mpBar" style="width: 100%"></div>
+                </div>
+            </div>
+            <div class="stat-bar">
+                <div class="stat-label">
+                    <span>EXP</span>
+                    <span><span id="currentEXP">0</span> / <span id="maxEXP">100</span></span>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-fill exp-bar" id="expBar" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 目標資訊 -->
+        <div id="targetInfo">
+            <div class="target-name" id="targetName">哥布林</div>
+            <div class="stat-bar">
+                <div class="bar-container">
+                    <div class="bar-fill hp-bar" id="targetHpBar" style="width: 100%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 迷你地圖 -->
+        <div id="minimap">
+            <canvas id="minimapCanvas"></canvas>
+        </div>
+
+        <!-- 戰鬥訊息 -->
+        <div id="combatLog"></div>
+
+        <!-- 技能欄 -->
+        <div id="skillBar">
+            <div class="skill-slot" data-skill="attack">
+                <span class="skill-icon">⚔️</span>
+                <span class="skill-key">1</span>
+                <span class="skill-name">普通攻擊</span>
+            </div>
+            <div class="skill-slot" data-skill="fireball">
+                <span class="skill-icon">🔥</span>
+                <span class="skill-key">2</span>
+                <span class="skill-name">火球術</span>
+            </div>
+            <div class="skill-slot" data-skill="heal">
+                <span class="skill-icon">💚</span>
+                <span class="skill-key">3</span>
+                <span class="skill-name">治療術</span>
+            </div>
+            <div class="skill-slot" data-skill="lightning">
+                <span class="skill-icon">⚡</span>
+                <span class="skill-key">4</span>
+                <span class="skill-name">閃電鏈</span>
+            </div>
+            <div class="skill-slot" data-skill="shield">
+                <span class="skill-icon">🛡️</span>
+                <span class="skill-key">5</span>
+                <span class="skill-name">護盾</span>
+            </div>
+        </div>
+
+        <!-- 控制說明 -->
+        <div id="controls">
+            <h4>操作說明</h4>
+            <div><span>WASD</span> - 移動</div>
+            <div><span>滑鼠</span> - 視角</div>
+            <div><span>左鍵</span> - 選取/攻擊</div>
+            <div><span>1-5</span> - 技能</div>
+            <div><span>Space</span> - 跳躍</div>
+        </div>
+    </div>
+
+    <!-- Babylon.js -->
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
+    <script src="https://cdn.babylonjs.com/gui/babylon.gui.min.js"></script>
+    <script src="https://cdn.babylonjs.com/materialsLibrary/babylonjs.materials.min.js"></script>
+    <script src="https://cdn.babylonjs.com/proceduralTexturesLibrary/babylonjs.proceduralTextures.min.js"></script>
+
+    <!-- 遊戲腳本 -->
+    <script src="js/game.js"></script>
+</body>
+</html>

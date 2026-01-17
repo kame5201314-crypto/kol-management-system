@@ -1,6 +1,6 @@
 /**
  * Database Types for Multi-Platform Sync
- * Schema: sync
+ * Schema: public
  */
 
 // Platform Types
@@ -204,59 +204,713 @@ export interface Category extends BaseFields {
 }
 
 // Database Schema - Supabase public schema
+// Using explicit Json type to satisfy Supabase requirements
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
+
 export interface Database {
   public: {
     Tables: {
       products: {
-        Row: Product
-        Insert: Omit<Product, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<Product, 'id' | 'created_at'>>
+        Row: {
+          id: string
+          org_id: string
+          created_at: string
+          updated_at: string
+          created_by: string | null
+          updated_by: string | null
+          is_deleted: boolean
+          deleted_at: string | null
+          metadata: Json
+          version: number
+          name: string
+          sku: string
+          description: string
+          base_price: number
+          cost_price: number
+          weight: number | null
+          weight_unit: string
+          dimensions: Json | null
+          category_id: string | null
+          brand: string | null
+          images: string[]
+          tags: string[]
+          is_active: boolean
+          variants: Json
+        }
+        Insert: {
+          id?: string
+          org_id: string
+          created_at?: string
+          updated_at?: string
+          created_by?: string | null
+          updated_by?: string | null
+          is_deleted?: boolean
+          deleted_at?: string | null
+          metadata?: Json
+          version?: number
+          name: string
+          sku: string
+          description?: string
+          base_price: number
+          cost_price?: number
+          weight?: number | null
+          weight_unit?: string
+          dimensions?: Json | null
+          category_id?: string | null
+          brand?: string | null
+          images?: string[]
+          tags?: string[]
+          is_active?: boolean
+          variants?: Json
+        }
+        Update: {
+          id?: string
+          org_id?: string
+          created_at?: string
+          updated_at?: string
+          created_by?: string | null
+          updated_by?: string | null
+          is_deleted?: boolean
+          deleted_at?: string | null
+          metadata?: Json
+          version?: number
+          name?: string
+          sku?: string
+          description?: string
+          base_price?: number
+          cost_price?: number
+          weight?: number | null
+          weight_unit?: string
+          dimensions?: Json | null
+          category_id?: string | null
+          brand?: string | null
+          images?: string[]
+          tags?: string[]
+          is_active?: boolean
+          variants?: Json
+        }
       }
       platform_connections: {
-        Row: PlatformConnection
-        Insert: Omit<PlatformConnection, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<PlatformConnection, 'id' | 'created_at'>>
+        Row: {
+          id: string
+          org_id: string
+          created_at: string
+          updated_at: string
+          created_by: string | null
+          updated_by: string | null
+          is_deleted: boolean
+          deleted_at: string | null
+          metadata: Json
+          version: number
+          platform: string
+          shop_id: string
+          shop_name: string
+          access_token: string | null
+          refresh_token: string | null
+          token_expires_at: string | null
+          is_connected: boolean
+          last_sync_at: string | null
+          sync_settings: Json
+        }
+        Insert: {
+          id?: string
+          org_id: string
+          created_at?: string
+          updated_at?: string
+          created_by?: string | null
+          updated_by?: string | null
+          is_deleted?: boolean
+          deleted_at?: string | null
+          metadata?: Json
+          version?: number
+          platform: string
+          shop_id: string
+          shop_name: string
+          access_token?: string | null
+          refresh_token?: string | null
+          token_expires_at?: string | null
+          is_connected?: boolean
+          last_sync_at?: string | null
+          sync_settings?: Json
+        }
+        Update: {
+          id?: string
+          org_id?: string
+          created_at?: string
+          updated_at?: string
+          created_by?: string | null
+          updated_by?: string | null
+          is_deleted?: boolean
+          deleted_at?: string | null
+          metadata?: Json
+          version?: number
+          platform?: string
+          shop_id?: string
+          shop_name?: string
+          access_token?: string | null
+          refresh_token?: string | null
+          token_expires_at?: string | null
+          is_connected?: boolean
+          last_sync_at?: string | null
+          sync_settings?: Json
+        }
       }
       product_listings: {
-        Row: ProductListing
-        Insert: Omit<ProductListing, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<ProductListing, 'id' | 'created_at'>>
+        Row: {
+          id: string
+          org_id: string
+          created_at: string
+          updated_at: string
+          created_by: string | null
+          updated_by: string | null
+          is_deleted: boolean
+          deleted_at: string | null
+          metadata: Json
+          version: number
+          product_id: string
+          platform_connection_id: string
+          platform: string
+          platform_product_id: string | null
+          platform_url: string | null
+          listing_status: string
+          sync_status: string
+          last_sync_at: string | null
+          last_sync_error: string | null
+          platform_price: number
+          platform_stock: number
+          platform_data: Json
+        }
+        Insert: {
+          id?: string
+          org_id: string
+          created_at?: string
+          updated_at?: string
+          created_by?: string | null
+          updated_by?: string | null
+          is_deleted?: boolean
+          deleted_at?: string | null
+          metadata?: Json
+          version?: number
+          product_id: string
+          platform_connection_id: string
+          platform: string
+          platform_product_id?: string | null
+          platform_url?: string | null
+          listing_status?: string
+          sync_status?: string
+          last_sync_at?: string | null
+          last_sync_error?: string | null
+          platform_price?: number
+          platform_stock?: number
+          platform_data?: Json
+        }
+        Update: {
+          id?: string
+          org_id?: string
+          created_at?: string
+          updated_at?: string
+          created_by?: string | null
+          updated_by?: string | null
+          is_deleted?: boolean
+          deleted_at?: string | null
+          metadata?: Json
+          version?: number
+          product_id?: string
+          platform_connection_id?: string
+          platform?: string
+          platform_product_id?: string | null
+          platform_url?: string | null
+          listing_status?: string
+          sync_status?: string
+          last_sync_at?: string | null
+          last_sync_error?: string | null
+          platform_price?: number
+          platform_stock?: number
+          platform_data?: Json
+        }
       }
       inventory: {
-        Row: Inventory
-        Insert: Omit<Inventory, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<Inventory, 'id' | 'created_at'>>
+        Row: {
+          id: string
+          org_id: string
+          created_at: string
+          updated_at: string
+          created_by: string | null
+          updated_by: string | null
+          is_deleted: boolean
+          deleted_at: string | null
+          metadata: Json
+          version: number
+          product_id: string
+          variant_id: string | null
+          sku: string
+          total_stock: number
+          reserved_stock: number
+          available_stock: number
+          low_stock_threshold: number
+          warehouse_location: string | null
+        }
+        Insert: {
+          id?: string
+          org_id: string
+          created_at?: string
+          updated_at?: string
+          created_by?: string | null
+          updated_by?: string | null
+          is_deleted?: boolean
+          deleted_at?: string | null
+          metadata?: Json
+          version?: number
+          product_id: string
+          variant_id?: string | null
+          sku: string
+          total_stock?: number
+          reserved_stock?: number
+          available_stock?: number
+          low_stock_threshold?: number
+          warehouse_location?: string | null
+        }
+        Update: {
+          id?: string
+          org_id?: string
+          created_at?: string
+          updated_at?: string
+          created_by?: string | null
+          updated_by?: string | null
+          is_deleted?: boolean
+          deleted_at?: string | null
+          metadata?: Json
+          version?: number
+          product_id?: string
+          variant_id?: string | null
+          sku?: string
+          total_stock?: number
+          reserved_stock?: number
+          available_stock?: number
+          low_stock_threshold?: number
+          warehouse_location?: string | null
+        }
       }
       inventory_logs: {
-        Row: InventoryLog
-        Insert: Omit<InventoryLog, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<InventoryLog, 'id' | 'created_at'>>
+        Row: {
+          id: string
+          org_id: string
+          created_at: string
+          updated_at: string
+          created_by: string | null
+          updated_by: string | null
+          is_deleted: boolean
+          deleted_at: string | null
+          metadata: Json
+          version: number
+          inventory_id: string
+          product_id: string
+          change_type: string
+          change_quantity: number
+          previous_quantity: number
+          new_quantity: number
+          reference_type: string | null
+          reference_id: string | null
+          notes: string | null
+        }
+        Insert: {
+          id?: string
+          org_id: string
+          created_at?: string
+          updated_at?: string
+          created_by?: string | null
+          updated_by?: string | null
+          is_deleted?: boolean
+          deleted_at?: string | null
+          metadata?: Json
+          version?: number
+          inventory_id: string
+          product_id: string
+          change_type: string
+          change_quantity: number
+          previous_quantity: number
+          new_quantity: number
+          reference_type?: string | null
+          reference_id?: string | null
+          notes?: string | null
+        }
+        Update: {
+          id?: string
+          org_id?: string
+          created_at?: string
+          updated_at?: string
+          created_by?: string | null
+          updated_by?: string | null
+          is_deleted?: boolean
+          deleted_at?: string | null
+          metadata?: Json
+          version?: number
+          inventory_id?: string
+          product_id?: string
+          change_type?: string
+          change_quantity?: number
+          previous_quantity?: number
+          new_quantity?: number
+          reference_type?: string | null
+          reference_id?: string | null
+          notes?: string | null
+        }
       }
       orders: {
-        Row: Order
-        Insert: Omit<Order, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<Order, 'id' | 'created_at'>>
+        Row: {
+          id: string
+          org_id: string
+          created_at: string
+          updated_at: string
+          created_by: string | null
+          updated_by: string | null
+          is_deleted: boolean
+          deleted_at: string | null
+          metadata: Json
+          version: number
+          platform_connection_id: string
+          platform: string
+          platform_order_id: string
+          order_number: string
+          status: string
+          customer_name: string
+          customer_email: string | null
+          customer_phone: string | null
+          shipping_address: Json
+          subtotal: number
+          shipping_fee: number
+          discount: number
+          total_amount: number
+          currency: string
+          payment_method: string | null
+          payment_status: string
+          shipped_at: string | null
+          delivered_at: string | null
+          notes: string | null
+        }
+        Insert: {
+          id?: string
+          org_id: string
+          created_at?: string
+          updated_at?: string
+          created_by?: string | null
+          updated_by?: string | null
+          is_deleted?: boolean
+          deleted_at?: string | null
+          metadata?: Json
+          version?: number
+          platform_connection_id: string
+          platform: string
+          platform_order_id: string
+          order_number: string
+          status?: string
+          customer_name: string
+          customer_email?: string | null
+          customer_phone?: string | null
+          shipping_address: Json
+          subtotal: number
+          shipping_fee?: number
+          discount?: number
+          total_amount: number
+          currency?: string
+          payment_method?: string | null
+          payment_status?: string
+          shipped_at?: string | null
+          delivered_at?: string | null
+          notes?: string | null
+        }
+        Update: {
+          id?: string
+          org_id?: string
+          created_at?: string
+          updated_at?: string
+          created_by?: string | null
+          updated_by?: string | null
+          is_deleted?: boolean
+          deleted_at?: string | null
+          metadata?: Json
+          version?: number
+          platform_connection_id?: string
+          platform?: string
+          platform_order_id?: string
+          order_number?: string
+          status?: string
+          customer_name?: string
+          customer_email?: string | null
+          customer_phone?: string | null
+          shipping_address?: Json
+          subtotal?: number
+          shipping_fee?: number
+          discount?: number
+          total_amount?: number
+          currency?: string
+          payment_method?: string | null
+          payment_status?: string
+          shipped_at?: string | null
+          delivered_at?: string | null
+          notes?: string | null
+        }
       }
       order_items: {
-        Row: OrderItem
-        Insert: Omit<OrderItem, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<OrderItem, 'id' | 'created_at'>>
+        Row: {
+          id: string
+          org_id: string
+          created_at: string
+          updated_at: string
+          created_by: string | null
+          updated_by: string | null
+          is_deleted: boolean
+          deleted_at: string | null
+          metadata: Json
+          version: number
+          order_id: string
+          product_id: string | null
+          product_listing_id: string | null
+          sku: string
+          name: string
+          variant_name: string | null
+          quantity: number
+          unit_price: number
+          subtotal: number
+          platform_item_id: string | null
+        }
+        Insert: {
+          id?: string
+          org_id: string
+          created_at?: string
+          updated_at?: string
+          created_by?: string | null
+          updated_by?: string | null
+          is_deleted?: boolean
+          deleted_at?: string | null
+          metadata?: Json
+          version?: number
+          order_id: string
+          product_id?: string | null
+          product_listing_id?: string | null
+          sku: string
+          name: string
+          variant_name?: string | null
+          quantity: number
+          unit_price: number
+          subtotal: number
+          platform_item_id?: string | null
+        }
+        Update: {
+          id?: string
+          org_id?: string
+          created_at?: string
+          updated_at?: string
+          created_by?: string | null
+          updated_by?: string | null
+          is_deleted?: boolean
+          deleted_at?: string | null
+          metadata?: Json
+          version?: number
+          order_id?: string
+          product_id?: string | null
+          product_listing_id?: string | null
+          sku?: string
+          name?: string
+          variant_name?: string | null
+          quantity?: number
+          unit_price?: number
+          subtotal?: number
+          platform_item_id?: string | null
+        }
       }
       sync_jobs: {
-        Row: SyncJob
-        Insert: Omit<SyncJob, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<SyncJob, 'id' | 'created_at'>>
+        Row: {
+          id: string
+          org_id: string
+          created_at: string
+          updated_at: string
+          created_by: string | null
+          updated_by: string | null
+          is_deleted: boolean
+          deleted_at: string | null
+          metadata: Json
+          version: number
+          platform_connection_id: string | null
+          job_type: string
+          status: string
+          started_at: string | null
+          completed_at: string | null
+          total_items: number
+          processed_items: number
+          success_items: number
+          failed_items: number
+          error_log: string[]
+        }
+        Insert: {
+          id?: string
+          org_id: string
+          created_at?: string
+          updated_at?: string
+          created_by?: string | null
+          updated_by?: string | null
+          is_deleted?: boolean
+          deleted_at?: string | null
+          metadata?: Json
+          version?: number
+          platform_connection_id?: string | null
+          job_type: string
+          status?: string
+          started_at?: string | null
+          completed_at?: string | null
+          total_items?: number
+          processed_items?: number
+          success_items?: number
+          failed_items?: number
+          error_log?: string[]
+        }
+        Update: {
+          id?: string
+          org_id?: string
+          created_at?: string
+          updated_at?: string
+          created_by?: string | null
+          updated_by?: string | null
+          is_deleted?: boolean
+          deleted_at?: string | null
+          metadata?: Json
+          version?: number
+          platform_connection_id?: string | null
+          job_type?: string
+          status?: string
+          started_at?: string | null
+          completed_at?: string | null
+          total_items?: number
+          processed_items?: number
+          success_items?: number
+          failed_items?: number
+          error_log?: string[]
+        }
       }
       sync_logs: {
-        Row: SyncLog
-        Insert: Omit<SyncLog, 'id' | 'created_at'>
-        Update: Partial<Omit<SyncLog, 'id' | 'created_at'>>
+        Row: {
+          id: string
+          org_id: string
+          job_id: string | null
+          platform: string
+          action: string
+          entity_type: string
+          entity_id: string | null
+          status: string
+          message: string | null
+          request_data: Json | null
+          response_data: Json | null
+          error_details: Json | null
+          created_at: string
+          metadata: Json | null
+        }
+        Insert: {
+          id?: string
+          org_id: string
+          job_id?: string | null
+          platform: string
+          action: string
+          entity_type: string
+          entity_id?: string | null
+          status: string
+          message?: string | null
+          request_data?: Json | null
+          response_data?: Json | null
+          error_details?: Json | null
+          created_at?: string
+          metadata?: Json | null
+        }
+        Update: {
+          id?: string
+          org_id?: string
+          job_id?: string | null
+          platform?: string
+          action?: string
+          entity_type?: string
+          entity_id?: string | null
+          status?: string
+          message?: string | null
+          request_data?: Json | null
+          response_data?: Json | null
+          error_details?: Json | null
+          created_at?: string
+          metadata?: Json | null
+        }
       }
       categories: {
-        Row: Category
-        Insert: Omit<Category, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<Category, 'id' | 'created_at'>>
+        Row: {
+          id: string
+          org_id: string
+          created_at: string
+          updated_at: string
+          created_by: string | null
+          updated_by: string | null
+          is_deleted: boolean
+          deleted_at: string | null
+          metadata: Json
+          version: number
+          name: string
+          slug: string
+          parent_id: string | null
+          description: string | null
+          image_url: string | null
+          sort_order: number
+        }
+        Insert: {
+          id?: string
+          org_id: string
+          created_at?: string
+          updated_at?: string
+          created_by?: string | null
+          updated_by?: string | null
+          is_deleted?: boolean
+          deleted_at?: string | null
+          metadata?: Json
+          version?: number
+          name: string
+          slug: string
+          parent_id?: string | null
+          description?: string | null
+          image_url?: string | null
+          sort_order?: number
+        }
+        Update: {
+          id?: string
+          org_id?: string
+          created_at?: string
+          updated_at?: string
+          created_by?: string | null
+          updated_by?: string | null
+          is_deleted?: boolean
+          deleted_at?: string | null
+          metadata?: Json
+          version?: number
+          name?: string
+          slug?: string
+          parent_id?: string | null
+          description?: string | null
+          image_url?: string | null
+          sort_order?: number
+        }
       }
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      [_ in never]: never
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
     }
   }
 }

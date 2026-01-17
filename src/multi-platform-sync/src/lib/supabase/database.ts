@@ -511,11 +511,12 @@ export async function adjustInventory(
     await supabase.from('inventory_logs').insert({
       org_id: orgId,
       inventory_id: inventoryId,
-      action,
-      quantity,
-      previous_stock: current.total_stock,
-      new_stock: newTotalStock,
-      reason,
+      product_id: current.product_id,
+      change_type: action === 'add' ? 'restock' : action === 'remove' ? 'adjustment' : 'adjustment',
+      change_quantity: quantity,
+      previous_quantity: current.total_stock,
+      new_quantity: newTotalStock,
+      notes: reason,
       created_by: userId,
     })
 
@@ -668,7 +669,7 @@ export async function getOrderItems(
 export async function createSyncJob(
   orgId: string,
   jobType: 'product_sync' | 'inventory_sync' | 'order_sync' | 'full_sync',
-  platform?: string,
+  platformConnectionId?: string,
   userId?: string
 ): Promise<{ data: SyncJob | null; error: string | null }> {
   try {
@@ -678,7 +679,7 @@ export async function createSyncJob(
       .insert({
         org_id: orgId,
         job_type: jobType,
-        platform,
+        platform_connection_id: platformConnectionId,
         status: 'pending',
         created_by: userId,
       })
@@ -843,7 +844,7 @@ export async function getDashboardStats(orgId: string): Promise<{
       .select('*', { count: 'exact', head: true })
       .eq('org_id', orgId)
       .eq('is_deleted', false)
-      .eq('status', 'active')
+      .eq('listing_status', 'active')
 
     // Get pending orders count
     const { count: pendingOrders } = await supabase
@@ -878,7 +879,7 @@ export async function getDashboardStats(orgId: string): Promise<{
       .from('product_listings')
       .select('id')
       .eq('org_id', orgId)
-      .eq('sync_status', 'error')
+      .eq('sync_status', 'failed')
 
     return {
       data: {
