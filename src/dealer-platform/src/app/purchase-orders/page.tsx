@@ -34,8 +34,16 @@ const statusColors: Record<string, 'default' | 'secondary' | 'destructive' | 'su
   cancelled: 'destructive',
 }
 
-export default async function PurchaseOrdersPage() {
-  const result = await getPurchaseOrders()
+export default async function PurchaseOrdersPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ search?: string; status?: string }>
+}) {
+  const params = await searchParams
+  const result = await getPurchaseOrders({
+    search: params.search,
+    status: params.status,
+  })
   const orders = result.success ? result.data ?? [] : []
 
   const stats = {
@@ -95,21 +103,37 @@ export default async function PurchaseOrdersPage() {
 
         {/* Filters */}
         <div className="bg-white rounded-lg shadow-sm p-4 mb-6 border">
-          <div className="flex flex-wrap gap-4">
+          <form className="flex flex-wrap gap-4">
             <div className="flex-1 min-w-[200px]">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <Input
-                  placeholder="搜尋採購單號、供應商..."
+                  name="search"
+                  placeholder="搜尋採購單號..."
                   className="pl-10"
+                  defaultValue={params.search}
                 />
               </div>
             </div>
-            <Button variant="outline">
+            <select
+              name="status"
+              defaultValue={params.status}
+              className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+            >
+              <option value="">全部狀態</option>
+              <option value="draft">草稿</option>
+              <option value="pending">待審核</option>
+              <option value="approved">已核准</option>
+              <option value="ordered">已下單</option>
+              <option value="partial">部分到貨</option>
+              <option value="completed">已完成</option>
+              <option value="cancelled">已取消</option>
+            </select>
+            <Button type="submit">
               <Filter className="w-4 h-4 mr-2" />
-              篩選
+              搜尋
             </Button>
-          </div>
+          </form>
         </div>
 
         {/* Table */}

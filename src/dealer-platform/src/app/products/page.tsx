@@ -158,7 +158,7 @@ export default async function ProductsPage({
                       <TableCell>{product.category ?? '-'}</TableCell>
                       <TableCell className="text-center">{product.unit}</TableCell>
                       <TableCell className="text-right">
-                        {formatCurrency(product.base_price)}
+                        {formatCurrency(product.list_price)}
                       </TableCell>
                       <TableCell className="text-right">
                         {product.cost_price ? formatCurrency(product.cost_price) : '-'}

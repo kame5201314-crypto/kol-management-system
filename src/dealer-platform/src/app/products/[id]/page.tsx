@@ -35,7 +35,7 @@ export default async function ProductDetailPage({
 
   // 計算毛利率
   const grossMargin = product.cost_price
-    ? ((product.base_price - product.cost_price) / product.base_price * 100).toFixed(1)
+    ? ((product.list_price - product.cost_price) / product.list_price * 100).toFixed(1)
     : null
 
   return (
@@ -91,8 +91,8 @@ export default async function ProductDetailPage({
                     <p className="font-medium">{product.unit}</p>
                   </div>
                   <div>
-                    <label className="text-sm text-gray-500">最小訂購量</label>
-                    <p className="font-medium">{product.min_order_qty}</p>
+                    <label className="text-sm text-gray-500">規格</label>
+                    <p className="font-medium">{product.spec ?? '-'}</p>
                   </div>
                 </div>
 
@@ -115,7 +115,7 @@ export default async function ProductDetailPage({
                   <div>
                     <label className="text-sm text-gray-500">售價</label>
                     <p className="text-xl font-bold text-primary">
-                      {formatCurrency(product.base_price)}
+                      {formatCurrency(product.list_price)}
                     </p>
                   </div>
                   <div>
@@ -131,9 +131,9 @@ export default async function ProductDetailPage({
                     </div>
                   )}
                   <div>
-                    <label className="text-sm text-gray-500">前置時間</label>
+                    <label className="text-sm text-gray-500">最低價</label>
                     <p className="font-medium">
-                      {product.lead_time_days ? `${product.lead_time_days} 天` : '-'}
+                      {product.min_price ? formatCurrency(product.min_price) : '-'}
                     </p>
                   </div>
                 </div>

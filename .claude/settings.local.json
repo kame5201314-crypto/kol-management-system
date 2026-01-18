@@ -92,7 +92,8 @@
       "Bash(npx serve:*)",
       "Bash(timeout:*)",
       "Bash(npx next build:*)",
-      "Bash(tee:*)"
+      "Bash(tee:*)",
+      "Bash(npm run type-check:*)"
     ],
     "deny": [],
     "ask": []

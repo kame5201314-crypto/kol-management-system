@@ -87,10 +87,8 @@ export async function createProduct(formData: FormData): Promise<ApiResponse<Pro
       description: formData.get('description') as string || null,
       category: formData.get('category') as string || null,
       unit: formData.get('unit') as string || 'PCS',
-      base_price: parseFloat(formData.get('base_price') as string) || 0,
+      list_price: parseFloat(formData.get('list_price') as string) || 0,
       cost_price: parseFloat(formData.get('cost_price') as string) || null,
-      min_order_qty: parseInt(formData.get('min_order_qty') as string) || 1,
-      lead_time_days: parseInt(formData.get('lead_time_days') as string) || null,
       status: 'active',
       created_by: userId,
       updated_by: userId,
@@ -127,10 +125,8 @@ export async function updateProduct(id: string, formData: FormData): Promise<Api
       description: formData.get('description') as string || null,
       category: formData.get('category') as string || null,
       unit: formData.get('unit') as string || 'PCS',
-      base_price: parseFloat(formData.get('base_price') as string) || 0,
+      list_price: parseFloat(formData.get('list_price') as string) || 0,
       cost_price: parseFloat(formData.get('cost_price') as string) || null,
-      min_order_qty: parseInt(formData.get('min_order_qty') as string) || 1,
-      lead_time_days: parseInt(formData.get('lead_time_days') as string) || null,
       status: formData.get('status') as string || 'active',
       updated_by: userId,
     }
@@ -231,7 +227,8 @@ export async function getProductCategories(): Promise<ApiResponse<string[]>> {
 
     if (error) throw error
 
-    const categories = [...new Set(data.map(p => p.category).filter(Boolean))]
+    const allCategories = data.map(p => p.category).filter(Boolean)
+    const categories = allCategories.filter((cat, idx) => allCategories.indexOf(cat) === idx)
     return { success: true, data: categories as string[] }
   } catch (error) {
     console.error('getProductCategories error:', error)

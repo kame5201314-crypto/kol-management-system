@@ -200,12 +200,12 @@ export default function EditProductPage() {
                     售價 <span className="text-red-500">*</span>
                   </label>
                   <Input
-                    name="base_price"
+                    name="list_price"
                     type="number"
                     min="0"
                     step="0.01"
                     required
-                    defaultValue={product.base_price}
+                    defaultValue={product.list_price}
                   />
                 </div>
                 <div>
@@ -231,24 +231,24 @@ export default function EditProductPage() {
               <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    最小訂購量
+                    規格
                   </label>
                   <Input
-                    name="min_order_qty"
-                    type="number"
-                    min="1"
-                    defaultValue={product.min_order_qty}
+                    name="spec"
+                    defaultValue={product.spec ?? ''}
+                    placeholder="產品規格"
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    前置時間 (天)
+                    最低價
                   </label>
                   <Input
-                    name="lead_time_days"
+                    name="min_price"
                     type="number"
                     min="0"
-                    defaultValue={product.lead_time_days ?? ''}
+                    step="0.01"
+                    defaultValue={product.min_price ?? ''}
                   />
                 </div>
               </CardContent>

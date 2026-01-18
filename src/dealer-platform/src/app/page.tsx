@@ -68,6 +68,12 @@ export default function HomePage() {
                 儀表板
               </Link>
               <Link
+                href="/products"
+                className="text-gray-600 hover:text-gray-900 font-medium"
+              >
+                產品
+              </Link>
+              <Link
                 href="/settings"
                 className="text-gray-600 hover:text-gray-900 font-medium"
               >
@@ -118,10 +124,14 @@ export default function HomePage() {
         {/* Quick Stats */}
         <div className="bg-white rounded-xl shadow-sm p-8 border border-gray-100">
           <h3 className="text-lg font-semibold text-gray-900 mb-6">快速統計</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
             <div className="text-center">
               <div className="text-3xl font-bold text-blue-600">--</div>
               <div className="text-sm text-gray-600 mt-1">供應商數量</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-cyan-600">--</div>
+              <div className="text-sm text-gray-600 mt-1">上架產品</div>
             </div>
             <div className="text-center">
               <div className="text-3xl font-bold text-green-600">--</div>

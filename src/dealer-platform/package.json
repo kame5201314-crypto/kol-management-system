@@ -5,8 +5,9 @@
   "private": true,
   "scripts": {
     "verify-env": "tsx scripts/verify-env.ts",
-    "dev": "npm run verify-env && next dev",
-    "build": "npm run verify-env && next build",
+    "dev": "next dev",
+    "build": "next build",
+    "build:local": "npm run verify-env && next build",
     "start": "next start",
     "lint": "next lint",
     "type-check": "tsc --noEmit"

@@ -73,10 +73,10 @@ export interface Product extends BaseFields {
   unit: string
   spec: string | null
   description: string | null
-  cost_price: number
+  cost_price: number | null
   list_price: number
-  min_price: number
-  status: 'active' | 'inactive'
+  min_price: number | null
+  status: 'active' | 'inactive' | 'discontinued'
 }
 
 /**
