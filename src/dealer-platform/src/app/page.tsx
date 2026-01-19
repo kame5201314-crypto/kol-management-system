@@ -6,7 +6,11 @@ import {
   FileText,
   Package,
   BarChart3,
-  ArrowRight
+  ArrowRight,
+  DollarSign,
+  ScrollText,
+  MessageSquare,
+  CreditCard,
 } from 'lucide-react'
 
 const features = [
@@ -18,11 +22,25 @@ const features = [
     color: 'bg-blue-500',
   },
   {
+    title: '客戶管理',
+    description: '客戶分級、信用額度、交易記錄',
+    icon: CreditCard,
+    href: '/customers',
+    color: 'bg-indigo-500',
+  },
+  {
     title: '產品管理',
     description: '產品目錄、分類管理、價格維護',
     icon: Package,
     href: '/products',
     color: 'bg-cyan-500',
+  },
+  {
+    title: '階梯定價',
+    description: '數量折扣、客戶等級、促銷活動',
+    icon: DollarSign,
+    href: '/pricing',
+    color: 'bg-emerald-500',
   },
   {
     title: '採購單管理',
@@ -45,6 +63,20 @@ const features = [
     href: '/quotations',
     color: 'bg-purple-500',
   },
+  {
+    title: '合約管理',
+    description: '合約條款、約定價格、到期提醒',
+    icon: ScrollText,
+    href: '/contracts',
+    color: 'bg-rose-500',
+  },
+  {
+    title: '批發詢價',
+    description: '詢價流程、報價回覆、轉換訂單',
+    icon: MessageSquare,
+    href: '/wholesale-inquiries',
+    color: 'bg-amber-500',
+  },
 ]
 
 export default function HomePage() {
@@ -62,16 +94,22 @@ export default function HomePage() {
             </div>
             <nav className="flex items-center space-x-4">
               <Link
-                href="/dashboard"
+                href="/customers"
                 className="text-gray-600 hover:text-gray-900 font-medium"
               >
-                儀表板
+                客戶
               </Link>
               <Link
-                href="/products"
+                href="/contracts"
                 className="text-gray-600 hover:text-gray-900 font-medium"
               >
-                產品
+                合約
+              </Link>
+              <Link
+                href="/pricing"
+                className="text-gray-600 hover:text-gray-900 font-medium"
+              >
+                定價
               </Link>
               <Link
                 href="/settings"
@@ -97,7 +135,7 @@ export default function HomePage() {
         </div>
 
         {/* Feature Cards */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 mb-12">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
           {features.map((feature) => (
             <Link
               key={feature.title}
@@ -124,26 +162,30 @@ export default function HomePage() {
         {/* Quick Stats */}
         <div className="bg-white rounded-xl shadow-sm p-8 border border-gray-100">
           <h3 className="text-lg font-semibold text-gray-900 mb-6">快速統計</h3>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
             <div className="text-center">
               <div className="text-3xl font-bold text-blue-600">--</div>
-              <div className="text-sm text-gray-600 mt-1">供應商數量</div>
+              <div className="text-sm text-gray-600 mt-1">供應商</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-indigo-600">--</div>
+              <div className="text-sm text-gray-600 mt-1">客戶</div>
             </div>
             <div className="text-center">
               <div className="text-3xl font-bold text-cyan-600">--</div>
-              <div className="text-sm text-gray-600 mt-1">上架產品</div>
+              <div className="text-sm text-gray-600 mt-1">產品</div>
             </div>
             <div className="text-center">
               <div className="text-3xl font-bold text-green-600">--</div>
-              <div className="text-sm text-gray-600 mt-1">進行中採購單</div>
+              <div className="text-sm text-gray-600 mt-1">採購單</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-orange-600">--</div>
-              <div className="text-sm text-gray-600 mt-1">待驗收交貨</div>
+              <div className="text-3xl font-bold text-rose-600">--</div>
+              <div className="text-sm text-gray-600 mt-1">有效合約</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-purple-600">--</div>
-              <div className="text-sm text-gray-600 mt-1">本月報價單</div>
+              <div className="text-3xl font-bold text-amber-600">--</div>
+              <div className="text-sm text-gray-600 mt-1">待處理詢價</div>
             </div>
           </div>
         </div>
